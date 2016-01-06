@@ -1,0 +1,29 @@
+{% extends "_layouts/base.html" %}
+
+{% block headline %}
+    <h1>Tung</h1>
+{% endblock headline %}
+
+{% block content %}
+    {% include "movies/_navigation.html" %}
+
+    <p>Colls: 
+    {% for year in years %}
+        <a href="{% url 'movies:coll' year %}">{{ year }}</a>
+        {% if not forloop.last %}
+            |
+        {% endif %}
+    {% endfor %}
+    </p>
+
+    <h3>Последние добавленные фильмы:</h3>
+    <ul>
+    {% for object in object_list %}
+        <li><a href="{% url 'movies:movie_detail' object.pk %}">{{ object.name }} ({{ object.year }})</a></li>
+    {% endfor %}
+    </ul>
+
+    <p>(<a href="{% url 'movies:movie_list' %}">все фильмы</a>)</p>
+
+    <p>[<a href="{% url 'movies:movie_create' %}">добавить фильм</a>]</p>
+{% endblock content %}

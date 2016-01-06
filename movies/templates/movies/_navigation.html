@@ -1,0 +1,27 @@
+<div>
+    <p><b>Movies</b>: 
+    {% for letter in all_movie_letters_ru %}
+        {% if letter in movie_letters_ru %}
+            <a href="{% url 'movies:movie_list' %}?letter={{ letter }}">{{ letter }}</a>
+        {% else %}
+            {{ letter }}
+        {% endif %}
+    {% endfor %}</p>
+    <p>
+    {% for letter in all_movie_letters_en %}
+        {% if letter in movie_letters_en %}
+            <a href="{% url 'movies:movie_list' %}?letter={{ letter }}">{{ letter }}</a>
+        {% else %}
+            {{ letter }}
+        {% endif %}
+    {% endfor %}</p>
+    <p><b>People</b>: 
+    {% for letter in all_person_letters %}
+        {% if letter in person_letters %}
+            <a href="{% url 'movies:person_list' %}?letter={{ letter }}">{{ letter }}</a>
+        {% else %}
+            {{ letter }}
+        {% endif %}
+    {% endfor %}</p>
+    <p><a href="{% url 'movies:year_list' %}">Years</a> | <a href="{% url 'movies:genre_list' %}">Genres</a></p>
+</div>

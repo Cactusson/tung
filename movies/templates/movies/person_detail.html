@@ -1,0 +1,27 @@
+{% extends "_layouts/base.html" %}
+
+{% block headline %}
+    <h1>{{ object.name }}</h1>
+{% endblock headline %}
+
+{% block content %}
+    {% include "movies/_navigation.html" %}
+    {% if directed %}
+        <h3>Director:</h3>
+        <ul>
+        {% for movie in directed %}
+            <li><a href="{% url 'movies:movie_detail' movie.pk %}">{{ movie.name }}</a></li>
+        {% endfor %}
+        </ul>
+    {% endif %}
+    {% if starred_in %}
+        <h3>Actor:</h3>
+        <ul>
+        {% for movie in starred_in %}
+            <li><a href="{% url 'movies:movie_detail' movie.pk %}">{{ movie.name }}</a></li>
+        {% endfor %}
+        </ul>
+    {% endif %}
+    <p>[<a href="{% url 'movies:person_list' %}">Back to all people</a>]</p>
+    <p>[<a href="{% url 'movies:person_delete' object.pk %}">Delete</a>]</p>
+{% endblock content %}

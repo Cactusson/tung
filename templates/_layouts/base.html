@@ -1,0 +1,20 @@
+{% load staticfiles %}
+
+<!DOCTYPE html>
+<html>
+<head>
+    <title>{% block title %}Tung{% endblock title %}</title>
+    <link rel="stylesheet" type="text/css" href="{% static 'movies/css/style.css' %}">
+</head>
+<body>
+    <div class="main">
+        {% if user.is_authenticated %}
+            {{ user.username }} | <a href="{% url 'logout' %}">Log Out</a>
+        {% else %}
+            <a href="{% url 'signup' %}">Sign Up</a> | <a href="{% url 'login' %}">Log In</a>
+        {% endif %}
+        <div class='text headline'>{% block headline %}{% endblock headline %}</div>
+        <div class='text'>{% block content %}{% endblock content %}</div>
+    </div>
+</body>
+</html>

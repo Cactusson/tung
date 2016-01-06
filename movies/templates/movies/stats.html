@@ -1,0 +1,16 @@
+{% extends "_layouts/base.html" %}
+
+{% block headline %}
+    <h1>Статистика</h1>
+{% endblock headline %}
+
+{% block content %}
+    {% include "movies/_navigation.html" %}
+
+    <p><b>Всего фильмов: </b>{{ total_movies }}</p>
+    <ul>
+    {% for grade, count in grades_counts %}
+        <li><a href="{% url 'movies:grade_detail' grade %}">{{ grade }}</a>: {{ count }}</li>
+    {% endfor %}
+    </ul>
+{% endblock content %}

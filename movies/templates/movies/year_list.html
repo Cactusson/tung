@@ -1,0 +1,14 @@
+{% extends "_layouts/base.html" %}
+
+{% block headline %}
+    <h1>Years</h1>
+{% endblock headline %}
+
+{% block content %}
+    {% include "movies/_navigation.html" %}
+    <ul>
+    {% for year, count in years %}
+        <li><a href="{% url 'movies:year_detail' %}?year={{ year }}">{{ year }}</a> ({{ count }})</li>
+    {% endfor %}
+    </ul>
+{% endblock content %}

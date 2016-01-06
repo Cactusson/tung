@@ -1,0 +1,30 @@
+{% extends "_layouts/base.html" %}
+
+{% block headline %}
+    <h3>{{ year }}</h3>
+{% endblock headline %}
+
+{% block content %}
+    {% for month, items in packed_items.items %}
+        <h3><u>{{ month }}</u></h3>
+        {% if items %}
+            <table>
+            {% for row in items %}
+                <tr>
+                    {% for item in row %}
+                        <td>
+                            <div class='item'>
+                                {% if item.image_url %}
+                                    <a href="{% url 'movies:movie_detail' item.pk %}"><img class='item_img' src="{{ item.image_url }}"></a>
+                                {% else %}
+                                    <a href="{% url 'movies:movie_detail' item.pk %}">{{ movie }}</a>
+                                {% endif %}
+                            </div>
+                        </td>  
+                    {% endfor %}
+                </tr>    
+            {% endfor %}
+            </table>
+        {% endif %}
+    {% endfor %}
+{% endblock content %}

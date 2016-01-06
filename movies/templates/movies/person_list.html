@@ -1,0 +1,12 @@
+{% extends "_layouts/base.html" %}
+
+{% block headline %}
+    <h1>List of persons</h1>
+{% endblock headline %}
+
+{% block content %}
+    {% include "movies/_navigation.html" %}
+    {% for object in object_list %}
+        <p><a href="{% url 'movies:person_detail' object.pk %}">{{ object.name }}</a></p>
+    {% endfor %}
+{% endblock content %}
