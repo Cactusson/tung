@@ -8,6 +8,7 @@
 </head>
 <body>
     <div class="main">
+        <a href="{% url 'movies:index' %}">Tung</a>
         {% if user.is_authenticated %}
             {{ user.username }} | <a href="{% url 'logout' %}">Log Out</a>
         {% else %}
