@@ -207,8 +207,10 @@ class PersonListView(
             else:
                 people = people.filter(first_letter=letter)
         # people = people.order_by('name')
-        people = people.annotate(acted_count=Count('starred_in'))
-        people = people.annotate(directed_count=Count('directed'))
+        people = people.annotate(acted_count=Count(
+            'starred_in', distinct=True))
+        people = people.annotate(directed_count=Count(
+            'directed', distinct=True))
         context['people'] = people
         return context
 
