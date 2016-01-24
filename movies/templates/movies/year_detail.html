@@ -1,4 +1,5 @@
 {% extends "_layouts/base.html" %}
+{% load staticfiles %}
 
 {% block headline %}
     <h1>Year {{ year }}</h1>
@@ -6,9 +7,9 @@
 
 {% block content %}
     {% include "movies/_navigation.html" %}
-    <ul>
-    {% for object in object_list %}
-        <li><a href="{% url 'movies:movie_detail' object.pk %}">{{ object }}</a></li>
-    {% endfor %}
-    </ul>
+    {% include "movies/_movietable.html" %}
 {% endblock content %}
+
+{% block js %}
+    <script type="text/javascript" src="{% static 'movies/js/movietable.js' %}"></script>
+{% endblock js %}

@@ -1,3 +1,5 @@
+import datetime
+
 from django.contrib.auth.models import User
 from django.core.exceptions import ObjectDoesNotExist
 from django.core.urlresolvers import reverse
@@ -40,6 +42,7 @@ class Movie(models.Model):
     actors = models.ManyToManyField(
         Person, related_name='starred_in', blank=True)
     dates = models.TextField(blank=True)
+    first_date = models.DateField()
     review = models.TextField(blank=True)
     grade = models.IntegerField(default=0)
 
@@ -51,6 +54,7 @@ class Movie(models.Model):
 
     def save(self, *args, **kwargs):
         self.set_first_letter()
+        self.set_first_date()
 
         super(Movie, self).save(*args, **kwargs)
 
@@ -87,3 +91,8 @@ class Movie(models.Model):
             self.first_letter = self.name[4]
         else:
             self.first_letter = self.name[0]
+
+    def set_first_date(self):
+        date = self.dates.split(', ')[0]
+        year, month, day = [int(elem) for elem in date.split('-')]
+        self.first_date = datetime.date(year, month, day)

@@ -1,6 +1,7 @@
 from operator import itemgetter
 
 from django.core.urlresolvers import reverse_lazy
+from django.db.models import Count
 from django.views import generic
 
 from braces import views
@@ -85,7 +86,7 @@ class IndexView(
 
     def get_queryset(self):
         queryset = super(IndexView, self).get_queryset()
-        queryset = queryset[:10]
+        queryset = queryset.order_by('-first_date')[:10]
         return queryset
 
     def get_context_data(self, **kwargs):
@@ -105,12 +106,24 @@ class IndexView(
 
 
 class MovieListView(
-    RestrictToUserMixin,
     LettersNavigationMixin,
-    LetterFilterMixin,
-    generic.ListView
+    generic.TemplateView
 ):
-    model = models.Movie
+    template_name = 'movies/movie_list.html'
+
+    def get_context_data(self, **kwargs):
+        context = super(MovieListView, self).get_context_data(**kwargs)
+        letter = self.request.GET.get('letter', '')
+        context['letter'] = letter
+        movies = models.Movie.objects.filter(user=self.request.user)
+        if letter:
+            if letter == '0-9':
+                numbers = [str(num) for num in range(10)]
+                movies = movies.filter(first_letter__in=numbers)
+            else:
+                movies = movies.filter(first_letter=letter)
+        context['movies'] = movies
+        return context
 
 
 class MovieDetailView(
@@ -177,12 +190,27 @@ class MovieDeleteView(
 
 
 class PersonListView(
-    RestrictToUserMixin,
     LettersNavigationMixin,
-    LetterFilterMixin,
-    generic.ListView
+    generic.TemplateView
 ):
-    model = models.Person
+    template_name = 'movies/person_list.html'
+
+    def get_context_data(self, **kwargs):
+        context = super(PersonListView, self).get_context_data(**kwargs)
+        letter = self.request.GET.get('letter', '')
+        context['letter'] = letter
+        people = models.Person.objects.filter(user=self.request.user)
+        if letter:
+            if letter == '0-9':
+                numbers = [str(num) for num in range(10)]
+                people = people.filter(first_letter__in=numbers)
+            else:
+                people = people.filter(first_letter=letter)
+        # people = people.order_by('name')
+        people = people.annotate(acted_count=Count('starred_in'))
+        people = people.annotate(directed_count=Count('directed'))
+        context['people'] = people
+        return context
 
 
 class PersonDetailView(
@@ -231,23 +259,19 @@ class YearListView(
 
 
 class YearDetailView(
-    RestrictToUserMixin,
     LettersNavigationMixin,
-    generic.ListView
+    generic.TemplateView
 ):
     template_name = 'movies/year_detail.html'
-    model = models.Movie
-
-    def get_queryset(self):
-        queryset = super(YearDetailView, self).get_queryset()
-        year = self.request.GET.get('year', '')
-        queryset = queryset.filter(year=year)
-        return queryset
 
     def get_context_data(self, **kwargs):
         context = super(YearDetailView, self).get_context_data(**kwargs)
         year = self.request.GET.get('year', '')
         context['year'] = year
+        movies = models.Movie.objects.filter(user=self.request.user)
+        movies = movies.filter(year=year)
+        context['movies'] = movies
+
         return context
 
 
@@ -272,23 +296,19 @@ class GenreListView(
 
 
 class GenreDetailView(
-    RestrictToUserMixin,
     LettersNavigationMixin,
-    generic.ListView
+    generic.TemplateView
 ):
     template_name = 'movies/genre_detail.html'
-    model = models.Movie
-
-    def get_queryset(self):
-        queryset = super(GenreDetailView, self).get_queryset()
-        genre = self.request.GET.get('genre', '')
-        queryset = queryset.filter(genre=genre)
-        return queryset
 
     def get_context_data(self, **kwargs):
         context = super(GenreDetailView, self).get_context_data(**kwargs)
         genre = self.request.GET.get('genre', '')
         context['genre'] = genre
+        movies = models.Movie.objects.filter(user=self.request.user)
+        movies = movies.filter(genre=genre)
+        context['movies'] = movies
+
         return context
 
 

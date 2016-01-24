@@ -2,11 +2,39 @@
 
 {% block headline %}
     <h1>List of persons</h1>
+    {% if letter %}
+        <h1>{{ letter }}</h1>
+    {% endif %}
 {% endblock headline %}
 
 {% block content %}
     {% include "movies/_navigation.html" %}
-    {% for object in object_list %}
-        <p><a href="{% url 'movies:person_detail' object.pk %}">{{ object.name }}</a></p>
+    <table id="myTable" class='tablesorter'>
+    <thead>
+        <tr>
+            <th>Name</th>
+            <th>Acted</th>
+            <th>Directed</th>
+    </thead>
+    <tbody>
+    {% for person in people %}
+        <tr>
+            <td><a href="{% url 'movies:person_detail' person.pk %}">{{ person.name }}</a></td>
+            <td>{{ person.acted_count }}</td>
+            <td>{{ person.directed_count }}</td>
+        </tr>
     {% endfor %}
+    </tbody>
+    </table>
+
+    {% block js %}
+        <script type="text/javascript">
+            $(document).ready(function() 
+                { 
+                    $("#myTable").tablesorter(); 
+                } 
+            ); 
+        </script>
+    {% endblock js %}
+
 {% endblock content %}

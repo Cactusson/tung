@@ -1,4 +1,5 @@
 {% extends "_layouts/base.html" %}
+{% load staticfiles %}
 
 {% block headline %}
     <h1>{{ object.name }}</h1>
@@ -8,20 +9,89 @@
     {% include "movies/_navigation.html" %}
     {% if directed %}
         <h3>Director:</h3>
-        <ul>
-        {% for movie in directed %}
-            <li><a href="{% url 'movies:movie_detail' movie.pk %}">{{ movie.name }}</a></li>
-        {% endfor %}
-        </ul>
+        <table id="tableDirected" class='tablesorter'>
+            <thead>
+                <tr>
+                    <th>Name</th>
+                    <th class="{sorter: 'monthYear'}">Date</th>
+                    <th>Grade</th>
+            </thead>
+            <tbody>
+            {% for movie in directed %}
+                <tr>
+                    <td><a href="{% url 'movies:movie_detail' movie.pk %}">{{ movie.name }}</a></td>
+                    <td>{{ movie.first_date|date:"M Y" }}</td>
+                    <td>{{ movie.grade }}</td>
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
     {% endif %}
     {% if starred_in %}
         <h3>Actor:</h3>
-        <ul>
-        {% for movie in starred_in %}
-            <li><a href="{% url 'movies:movie_detail' movie.pk %}">{{ movie.name }}</a></li>
-        {% endfor %}
-        </ul>
+        <table id="tableActed" class='tablesorter'>
+            <thead>
+                <tr>
+                    <th>Name</th>
+                    <th class="{sorter: 'monthYear'}">Date</th>
+                    <th>Grade</th>
+            </thead>
+            <tbody>
+            {% for movie in starred_in %}
+                <tr>
+                    <td><a href="{% url 'movies:movie_detail' movie.pk %}">{{ movie.name }}</a></td>
+                    <td>{{ movie.first_date|date:"M Y" }}</td>
+                    <td>{{ movie.grade }}</td>
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
     {% endif %}
     <p>[<a href="{% url 'movies:person_list' %}">Back to all people</a>]</p>
     <p>[<a href="{% url 'movies:person_delete' object.pk %}">Delete</a>]</p>
 {% endblock content %}
+
+{% block js %}
+    <script type="text/javascript">
+        $.tablesorter.addParser({
+        id: 'monthYear',
+        is: function(s) {
+            return false;
+        },
+        format: function(s) {
+            // remove extra spacing
+            s = $.trim(s.replace(/\s+/g, ' '));
+            // process date
+            var date = s.match(/^(\w{3})[ ](\d{4})$/),
+            m = date ? date[1] + ' 1 ' || '' : '',
+            y = date && date[2] ? date[2] || '' : '';
+            return new Date(m + y).getTime() || '';
+        },
+        type: 'Numeric'
+    });
+
+    $(document).ready(function() 
+    { 
+        $("#tableDirected").tablesorter({
+            headers: {
+                1: {
+                    sorter: 'monthYear'
+                }
+            }
+        }); 
+            } 
+        );
+
+    $(document).ready(function() 
+    { 
+        $("#tableActed").tablesorter({
+            headers: {
+                1: {
+                    sorter: 'monthYear'
+                }
+            }
+        }); 
+            } 
+        );
+    </script>
+{% endblock js %}

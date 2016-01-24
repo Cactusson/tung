@@ -19,7 +19,7 @@
     <h3>Последние добавленные фильмы:</h3>
     <ul>
     {% for object in object_list %}
-        <li><a href="{% url 'movies:movie_detail' object.pk %}">{{ object.name }} ({{ object.year }})</a></li>
+        <li><a href="{% url 'movies:movie_detail' object.pk %}">{{ object.name }} ({{ object.year }})</a> — {{ object.first_date|date:"M Y" }} — {{ object.grade }}/10</li>
     {% endfor %}
     </ul>
 

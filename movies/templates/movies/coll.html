@@ -1,4 +1,5 @@
 {% extends "_layouts/base.html" %}
+{% load movies_extras %}
 
 {% block headline %}
     <h3>{{ year }}</h3>
@@ -6,7 +7,7 @@
 
 {% block content %}
     {% for month, items in packed_items.items %}
-        <h3><u>{{ month }}</u></h3>
+        <h3><u>{{ month|month_number_to_word }}</u></h3>
         {% if items %}
             <table>
             {% for row in items %}
@@ -19,6 +20,8 @@
                                 {% else %}
                                     <a href="{% url 'movies:movie_detail' item.pk %}">{{ movie }}</a>
                                 {% endif %}
+                                {{ item.name }} ({{ item.year }})<br>
+                                ({{ item.grade }}/10)
                             </div>
                         </td>  
                     {% endfor %}

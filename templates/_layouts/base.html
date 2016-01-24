@@ -5,6 +5,7 @@
 <head>
     <title>{% block title %}Tung{% endblock title %}</title>
     <link rel="stylesheet" type="text/css" href="{% static 'movies/css/style.css' %}">
+    
 </head>
 <body>
     <div class="main">
@@ -17,5 +18,8 @@
         <div class='text headline'>{% block headline %}{% endblock headline %}</div>
         <div class='text'>{% block content %}{% endblock content %}</div>
     </div>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.0/jquery.min.js"></script>
+    <script type="text/javascript" src="{% static 'movies/js/jquery.tablesorter.min.js' %}"></script>
+    {% block js %}{% endblock js %}
 </body>
 </html>
