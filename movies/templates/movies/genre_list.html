@@ -1,11 +1,10 @@
 {% extends "_layouts/base.html" %}
 
 {% block headline %}
-    <h1>Genres</h1>
+    <h1>Жанры</h1>
 {% endblock headline %}
 
 {% block content %}
-    {% include "movies/_navigation.html" %}
     <ul>
     {% for genre, count in genres %}
         <li><a href="{% url 'movies:genre_detail' %}?genre={{ genre }}">{{ genre }}</a> ({{ count }})</li>

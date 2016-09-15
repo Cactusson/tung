@@ -1,0 +1,49 @@
+{% extends "_layouts/base.html" %}
+
+{% block headline %}
+    <h1>Сериалы</h1>
+{% endblock headline %}
+
+{% block content %}
+
+    <p>Годы зазыра: 
+    {% for year in years %}
+        <a href="{% url 'movies:tv_coll' year %}">{{ year }}</a>
+        {% if not forloop.last %}
+            |
+        {% endif %}
+    {% endfor %}
+    </p>
+    
+    <h2>Драматические</h2>
+    {% for show in genres_dict.drama %}
+        <p><a href="{% url 'movies:tvshow_detail' show.pk %}">{{ show }}</a></p>
+    {% endfor %}
+
+    <h2>Комедийные</h2>
+    {% for show in genres_dict.comedy %}
+        <p><a href="{% url 'movies:tvshow_detail' show.pk %}">{{ show }}</a></p>
+    {% endfor %}
+
+    <h2>Анимационные</h2>
+    {% for show in genres_dict.animated %}
+        <p><a href="{% url 'movies:tvshow_detail' show.pk %}">{{ show }}</a></p>
+    {% endfor %}
+
+    <h2>Фантастические</h2>
+    {% for show in genres_dict.fantastic %}
+        <p><a href="{% url 'movies:tvshow_detail' show.pk %}">{{ show }}</a></p>
+    {% endfor %}
+
+    <h2>Документальные</h2>
+    {% for show in genres_dict.doc %}
+        <p><a href="{% url 'movies:tvshow_detail' show.pk %}">{{ show }}</a></p>
+    {% endfor %}
+
+    <h2>Другие</h2>
+    {% for show in genres_dict.other %}
+        <p><a href="{% url 'movies:tvshow_detail' show.pk %}">{{ show }}</a></p>
+    {% endfor %}
+
+    <p>[<a href="{% url 'movies:tvshow_create' %}">Добавить сериал</a>]</p>
+{% endblock content %}

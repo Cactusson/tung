@@ -1,0 +1,17 @@
+<table id="myTable" class='tablesorter'>
+    <thead>
+        <tr>
+            <th>Название</th>
+            <th class="{sorter: 'monthYear'}">Дата</th>
+            <th>Оценка</th>
+    </thead>
+    <tbody>
+    {% for book in object_list %}
+        <tr>
+            <td><a href="{% url 'books:book_detail' book.pk %}">{{ book.name }}</a></td>
+            <td>{{ book.first_date|date:"M Y" }}</td>
+            <td>{{ book.grade }}</td>
+        </tr>
+    {% endfor %}
+    </tbody>
+</table>

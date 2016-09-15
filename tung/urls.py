@@ -18,11 +18,13 @@ from django.contrib import admin
 
 from . import views
 from movies import urls as movies_urls
+from books import urls as books_urls
 
 
 urlpatterns = [
     url(r'^admin/', include(admin.site.urls)),
     url(r'^movies/', include(movies_urls, namespace='movies')),
+    url(r'^books/', include(books_urls, namespace='books')),
     url(r'^$', views.HomePageView.as_view(), name='home'),
     url(r'^accounts/register/$', views.SignUpView.as_view(), name='signup'),
     url(r'^accounts/login/$', views.LogInView.as_view(), name='login'),

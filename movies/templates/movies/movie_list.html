@@ -2,14 +2,13 @@
 {% load staticfiles %}
 
 {% block headline %}
-    <h1>List of movies</h1>
+    <h1>Список фильмов</h1>
     {% if letter %}
         <h1>{{ letter }}</h1>
     {% endif %}
 {% endblock headline %}
 
 {% block content %}
-    {% include "movies/_navigation.html" %}
     {% include "movies/_movietable.html" %}
 {% endblock content %}
 

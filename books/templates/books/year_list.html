@@ -1,0 +1,13 @@
+{% extends "_layouts/base.html" %}
+
+{% block headline %}
+    <h1>Годы</h1>
+{% endblock headline %}
+
+{% block content %}
+    <ul>
+    {% for year, count in years %}
+        <li><a href="{% url 'books:year_detail' %}?year={{ year }}">{{ year }}</a> ({{ count }})</li>
+    {% endfor %}
+    </ul>
+{% endblock content %}

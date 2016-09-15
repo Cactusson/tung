@@ -1,0 +1,37 @@
+{% extends "_layouts/base.html" %}
+
+{% block headline %}
+    <h1>Авторы</h1>
+    {% if letter %}
+        <h1>{{ letter }}</h1>
+    {% endif %}
+{% endblock headline %}
+
+{% block content %}
+    <table id="myTable" class='tablesorter'>
+    <thead>
+        <tr>
+            <th>Имя</th>
+            <th>Книги</th>
+    </thead>
+    <tbody>
+    {% for author in people %}
+        <tr>
+            <td><a href="{% url 'books:author_detail' author.pk %}">{{ author.name }}</a></td>
+            <td>{{ author.written_count }}</td>
+        </tr>
+    {% endfor %}
+    </tbody>
+    </table>
+
+    {% block js %}
+        <script type="text/javascript">
+            $(document).ready(function() 
+                { 
+                    $("#myTable").tablesorter(); 
+                } 
+            ); 
+        </script>
+    {% endblock js %}
+
+{% endblock content %}

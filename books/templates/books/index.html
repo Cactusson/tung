@@ -1,0 +1,21 @@
+{% extends "_layouts/base.html" %}
+
+{% block headline %}
+    <h1>Тунг — Книги</h1>
+{% endblock headline %}
+
+{% block content %}
+    {% include "books/_navigation.html" %}
+
+    <p>Годы зазыра: 
+    {% for year in years %}
+        <a href="{% url 'books:coll' year %}">{{ year }}</a>
+        {% if not forloop.last %}
+            |
+        {% endif %}
+    {% endfor %}
+    </p>
+
+    <p><a href="{% url 'books:book_list' %}">Все книги</a></p>
+    <p><a href="{% url 'books:book_create' %}">Добавить книгу</a></p>
+{% endblock content %}

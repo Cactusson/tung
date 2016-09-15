@@ -1,0 +1,37 @@
+{% extends "_layouts/base.html" %}
+
+{% block headline %}
+    <h1>{{ object }}</h1>
+{% endblock headline %}
+
+{% block content %}
+    <div class="poster_stuff">
+        <img src="{{ object.image_url }}" class='poster'>
+    </div>
+
+    <div class="review_stuff">
+        <p><b>Сериал: </b><a href="{% url 'movies:tvshow_detail' object.tvshow.pk %}">{{ object.tvshow }}</a>.</p>
+        <p><b>Сезон: </b>{{ object.number }}{% if object.name %} ({{ object.name }}){% endif %}.</p>
+        <p><b>Год: </b>{{ object.year }}.</p>
+        {% if actors_list %}
+            <p><b>В ролях: </b>{% for actor in actors_list %}
+                <a href="{% url 'movies:person_detail' actor.pk %}">{{ actor.name }}</a>{% if not forloop.last %}, {% else %}.{% endif %}
+            {% endfor %}</p>
+        {% endif %}
+
+        <br>
+
+        <p>{{ object.review|safe|linebreaks }}</p>
+
+        <br>
+
+        <p><b>Оценка: </b>{{ object.grade }} из 10.</p>
+
+        <p><b>Даты: </b>{% for date in dates_list %}
+            {{ date }}{% if not forloop.last %}, {% else %}.{% endif %}
+        {% endfor %}</p>
+
+        <p>[<a href="{% url 'movies:tvshowseason_update' object.tvshow.pk object.url_number %}">Редактировать</a>]</p>
+        <p>[<a href="{% url 'movies:tvshowseason_delete' object.tvshow.pk object.url_number %}">Удалить</a>]</p>
+    </div>
+{% endblock content %}

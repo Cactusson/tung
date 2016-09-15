@@ -1,0 +1,33 @@
+{% extends "_layouts/base.html" %}
+
+{% block headline %}
+    <h1>{{ object.name }}</h1>
+{% endblock headline %}
+
+{% block content %}
+    <div class="poster_stuff">
+        <img src="{{ object.image_url }}" class='poster'>
+    </div>
+
+    <div class="review_stuff">
+        <p><b>Жанр: </b>{{ object.genre }}.</p>
+
+        <p><b>Создатель: </b>{% for creator in creators_list %}
+            <a href="{% url 'movies:person_detail' creator.pk %}">{{ creator.name }}</a>{% if not forloop.last %}, {% else %}.{% endif %}
+        {% endfor %}</p>
+
+        <br>
+
+        <h3>Сезоны</h3>
+
+        {% for season in seasons %}
+            <p><a href="{% url 'movies:tvshowseason_detail' object.pk season.url_number %}">Сезон {{ season.number }} ({{ season.year }})</a></p>
+        {% endfor %}
+
+        <br>
+
+        <p>[<a href="{% url 'movies:tvshowseason_create' object.pk %}">Добавить сезон</a>]</p>
+        <p>[<a href="{% url 'movies:tvshow_update' object.pk %}">Редактировать сериал</a>]</p>
+        <p>[<a href="{% url 'movies:tvshow_delete' object.pk %}">Удалить сериал</a>]</p>
+    </div>
+{% endblock content %}

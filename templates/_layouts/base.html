@@ -9,12 +9,23 @@
 </head>
 <body>
     <div class="main">
-        <a href="{% url 'movies:index' %}">Tung</a>
-        {% if user.is_authenticated %}
-            {{ user.username }} | <a href="{% url 'logout' %}">Log Out</a>
-        {% else %}
-            <a href="{% url 'signup' %}">Sign Up</a> | <a href="{% url 'login' %}">Log In</a>
-        {% endif %}
+        <div class='navbar'>
+            <ul class="navbar-left">
+                <li><a href="{% url 'movies:index' %}">Фильмы</a></li>
+                <li><a href="{% url 'movies:tvshow_list' %}">Сериалы</a></li>
+                <li><a href="{% url 'books:index' %}">Книги</a></li>
+            </ul>
+            <ul class="navbar-right">
+                {% if user.is_authenticated %}
+                    <li><b>{{ user.username }}</b></li>
+                    <li><a href="{% url 'logout' %}">Выйти</a></li>
+                {% else %}
+                    <li><a href="{% url 'signup' %}">Регистрация</a></li>
+                    <li><a href="{% url 'login' %}">Войти</a></li>
+                {% endif %}
+            </ul>
+        </div>
+
         <div class='text headline'>{% block headline %}{% endblock headline %}</div>
         <div class='text'>{% block content %}{% endblock content %}</div>
     </div>

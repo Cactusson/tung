@@ -1,0 +1,50 @@
+<div class="navigation">
+    <table>
+        <tr>
+            <td><b>Книги: </b></td>
+            <td width="10px">&nbsp;</td>
+            <td>
+                {% for letter in all_book_letters_en %}
+                    {% if letter in book_letters_en %}
+                        <a href="{% url 'books:book_list' %}?letter={{ letter }}">{{ letter }}</a>
+                    {% else %}
+                        {{ letter }}
+                    {% endif %}
+                {% endfor %}
+            </td>
+        </tr>
+        <tr>
+            <td></td>
+            <td width="10px">&nbsp;</td>
+            <td>
+                {% for letter in all_book_letters_ru %}
+                    {% if letter in book_letters_ru %}
+                        <a href="{% url 'books:book_list' %}?letter={{ letter }}">{{ letter }}</a>
+                    {% else %}
+                        {{ letter }}
+                    {% endif %}
+                {% endfor %}
+            </td>
+        </tr>
+        <tr>
+            <td><b>Авторы: </b></td>
+            <td width="10px">&nbsp;</td>
+            <td>
+                {% for letter in all_author_letters %}
+                    {% if letter in author_letters %}
+                        <a href="{% url 'books:author_list' %}?letter={{ letter }}">{{ letter }}</a>
+                    {% else %}
+                        {{ letter }}
+                    {% endif %}
+                {% endfor %}
+            </td>
+        </tr>
+    </table>
+    <table>
+        <tr>
+            <td><a href="{% url 'books:year_list' %}">Годы</a></td>
+            <td width="10px">&nbsp;|</td>
+            <td><a href="{% url 'books:genre_list' %}">Жанры</a></td>
+        </tr>
+    </table>
+</div>

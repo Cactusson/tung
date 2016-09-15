@@ -2,11 +2,15 @@ from operator import itemgetter
 
 from django.core.urlresolvers import reverse_lazy
 from django.db.models import Count
+from django.shortcuts import get_object_or_404
 from django.views import generic
 
 from braces import views
 
 from . import forms, models
+
+
+RU = 'АБВГДЕЁЖЗИЙКЛМНОПРСТУФХЦЧШЩЬЫЪЭЮЯ'
 
 
 class RestrictToUserMixin(
@@ -21,18 +25,18 @@ class RestrictToUserMixin(
 class LettersNavigationMixin(
     views.LoginRequiredMixin
 ):
+
     def get_context_data(self, **kwargs):
         context = super(LettersNavigationMixin, self).get_context_data(
             **kwargs)
         movies = models.Movie.objects.filter(user=self.request.user)
         people = models.Person.objects.filter(user=self.request.user)
 
-        all_movie_letters_ru = 'АБВГДЕЁЖЗИЙКЛМНОПРСТУФХЦЧШЩЬЫЪЭЮЯ'
         movie_letters_ru = []
-        for letter in all_movie_letters_ru:
+        for letter in RU:
             if movies.filter(first_letter=letter):
                 movie_letters_ru.append(letter)
-        context['all_movie_letters_ru'] = list(all_movie_letters_ru)
+        context['all_movie_letters_ru'] = list(RU)
         context['movie_letters_ru'] = movie_letters_ru
 
         numbers = [str(n) for n in range(10)]
@@ -46,12 +50,11 @@ class LettersNavigationMixin(
         context['all_movie_letters_en'] = list(all_movie_letters_en) + ['0-9']
         context['movie_letters_en'] = movie_letters_en
 
-        all_person_letters = 'АБВГДЕЁЖЗИЙКЛМНОПРСТУФХЦЧШЩЬЫЪЭЮЯ'
         person_letters = []
-        for letter in all_person_letters:
+        for letter in RU:
             if people.filter(first_letter=letter):
                 person_letters.append(letter)
-        context['all_person_letters'] = list(all_person_letters)
+        context['all_person_letters'] = list(RU)
         context['person_letters'] = person_letters
 
         return context
@@ -97,16 +100,16 @@ class IndexView(
         dates = [movie.dates for movie in movies]
         for date_string in dates:
             for date in date_string.split(', '):
-                year = date.split('-')[0]
+                year = int(date.split('-')[0])
                 if year not in years:
                     years.append(year)
+        years.sort()
 
         context['years'] = years
         return context
 
 
 class MovieListView(
-    LettersNavigationMixin,
     generic.TemplateView
 ):
     template_name = 'movies/movie_list.html'
@@ -128,7 +131,6 @@ class MovieListView(
 
 class MovieDetailView(
     RestrictToUserMixin,
-    LettersNavigationMixin,
     generic.DetailView
 ):
     model = models.Movie
@@ -145,9 +147,12 @@ class MovieDetailView(
 
         actors = movie.actors.all()
         actors_list = []
-        for actor in movie.actors_list.split(', '):
-            actors_list.append(actors.get(name=actor))
-        context['actors_list'] = actors_list
+        if movie.actors_list:
+            for actor in movie.actors_list.split(', '):
+                actors_list.append(actors.get(name=actor))
+            context['actors_list'] = actors_list
+        else:
+            pass
 
         dates = movie.dates.split(', ')
         context['dates_list'] = dates
@@ -190,7 +195,6 @@ class MovieDeleteView(
 
 
 class PersonListView(
-    LettersNavigationMixin,
     generic.TemplateView
 ):
     template_name = 'movies/person_list.html'
@@ -217,7 +221,6 @@ class PersonListView(
 
 class PersonDetailView(
     RestrictToUserMixin,
-    LettersNavigationMixin,
     LetterFilterMixin,
     generic.DetailView
 ):
@@ -229,6 +232,12 @@ class PersonDetailView(
         context['directed'] = directed
         starred_in = self.object.starred_in.order_by('year')
         context['starred_in'] = starred_in
+        created = self.object.created.order_by('name')
+        context['created'] = created
+        shows = [season.tvshow for season in
+                 self.object.tvshowseason_starred_in.all()]
+        shows = list(set(shows))
+        context['tvshows_starred_in'] = shows
         return context
 
 
@@ -241,7 +250,6 @@ class PersonDeleteView(
 
 
 class YearListView(
-    LettersNavigationMixin,
     generic.TemplateView
 ):
     template_name = 'movies/year_list.html'
@@ -261,7 +269,6 @@ class YearListView(
 
 
 class YearDetailView(
-    LettersNavigationMixin,
     generic.TemplateView
 ):
     template_name = 'movies/year_detail.html'
@@ -278,7 +285,6 @@ class YearDetailView(
 
 
 class GenreListView(
-    LettersNavigationMixin,
     generic.TemplateView
 ):
     template_name = 'movies/genre_list.html'
@@ -298,7 +304,6 @@ class GenreListView(
 
 
 class GenreDetailView(
-    LettersNavigationMixin,
     generic.TemplateView
 ):
     template_name = 'movies/genre_detail.html'
@@ -316,7 +321,6 @@ class GenreDetailView(
 
 class CollView(
     RestrictToUserMixin,
-    LettersNavigationMixin,
     generic.TemplateView
 ):
     template_name = 'movies/coll.html'
@@ -358,7 +362,6 @@ class CollView(
 
 class GradeDetailView(
     RestrictToUserMixin,
-    LettersNavigationMixin,
     generic.ListView
 ):
     template_name = 'movies/grade_detail.html'
@@ -379,7 +382,6 @@ class GradeDetailView(
 
 class StatsView(
     RestrictToUserMixin,
-    LettersNavigationMixin,
     generic.TemplateView
 ):
     template_name = 'movies/stats.html'
@@ -397,4 +399,212 @@ class StatsView(
         grades_counts = zip(grades, counts)
 
         context['grades_counts'] = grades_counts
+        return context
+
+
+class TVShowListView(
+    generic.TemplateView
+):
+    template_name = 'movies/tvshow_list.html'
+
+    def get_context_data(self, **kwargs):
+        context = super(TVShowListView, self).get_context_data(**kwargs)
+        shows = models.TVShow.objects.filter(user=self.request.user)
+        genres = ['drama', 'comedy', 'animated', 'fantastic', 'doc', 'other']
+        genres_dict = {}
+        for genre in genres:
+            genres_dict[genre] = shows.filter(genre_family=genre)
+        context['genres_dict'] = genres_dict
+
+        years = []
+        seasons = models.TVShowSeason.objects.filter(user=self.request.user)
+        dates = [season.dates for season in seasons]
+        for date_string in dates:
+            for date in date_string.split(', '):
+                year = int(date.split('-')[0])
+                if year not in years:
+                    years.append(year)
+        years.sort()
+        context['years'] = years
+
+        return context
+
+
+class TVShowDetailView(
+    RestrictToUserMixin,
+    generic.DetailView
+):
+    model = models.TVShow
+
+    def get_context_data(self, **kwargs):
+        context = super(TVShowDetailView, self).get_context_data(**kwargs)
+        show = self.get_object()
+
+        creators = show.creators.all()
+        creators_list = []
+        for creator in show.creators_list.split(', '):
+            creators_list.append(creators.get(name=creator))
+        context['creators_list'] = creators_list
+
+        seasons = show.seasons.order_by('number')
+        context['seasons'] = seasons
+
+        return context
+
+
+class TVShowCreateView(
+    views.LoginRequiredMixin,
+    views.SetHeadlineMixin,
+    generic.CreateView
+):
+    form_class = forms.TVShowForm
+    model = models.TVShow
+    headline = 'Create'
+
+    def form_valid(self, form):
+        self.object = form.save(commit=False)
+        self.object.user = self.request.user
+        self.object.save()
+        return super(TVShowCreateView, self).form_valid(form)
+
+
+class TVShowUpdateView(
+    RestrictToUserMixin,
+    views.SetHeadlineMixin,
+    generic.UpdateView
+):
+    form_class = forms.TVShowForm
+    model = models.TVShow
+    headline = 'Update'
+
+
+class TVShowDeleteView(
+    RestrictToUserMixin,
+    generic.DeleteView
+):
+    model = models.TVShow
+    success_url = reverse_lazy('movies:tvshow_list')
+
+
+class TVShowSeasonDetailView(
+    RestrictToUserMixin,
+    generic.DetailView
+):
+    model = models.TVShowSeason
+
+    def get_object(self):
+        tvshow = get_object_or_404(models.TVShow, pk=self.kwargs['pk'])
+        number = self.kwargs['url_number']
+        season = get_object_or_404(models.TVShowSeason, tvshow=tvshow,
+                                   url_number=number)
+        return season
+
+    def get_context_data(self, **kwargs):
+        context = super(
+            TVShowSeasonDetailView, self).get_context_data(**kwargs)
+        season = self.get_object()
+
+        actors = season.actors.all()
+        actors_list = []
+        if season.actors_list:
+            for actor in season.actors_list.split(', '):
+                actors_list.append(actors.get(name=actor))
+            context['actors_list'] = actors_list
+        else:
+            pass
+
+        dates = season.dates.split(', ')
+        context['dates_list'] = dates
+
+        return context
+
+
+class TVShowSeasonCreateView(
+    views.LoginRequiredMixin,
+    views.SetHeadlineMixin,
+    generic.CreateView
+):
+    form_class = forms.TVShowSeasonForm
+    model = models.TVShowSeason
+    headline = 'Create'
+
+    def form_valid(self, form):
+        self.object = form.save(commit=False)
+        self.object.user = self.request.user
+        self.object.tvshow = get_object_or_404(models.TVShow,
+                                               pk=self.kwargs['pk'])
+        self.object.save()
+        return super(TVShowSeasonCreateView, self).form_valid(form)
+
+
+class TVShowSeasonUpdateView(
+    RestrictToUserMixin,
+    views.SetHeadlineMixin,
+    generic.UpdateView
+):
+    form_class = forms.TVShowSeasonForm
+    model = models.TVShowSeason
+    headline = 'Update'
+
+    def get_object(self):
+        tvshow = get_object_or_404(models.TVShow, pk=self.kwargs['pk'])
+        number = self.kwargs['url_number']
+        season = get_object_or_404(models.TVShowSeason, tvshow=tvshow,
+                                   url_number=number)
+        return season
+
+
+class TVShowSeasonDeleteView(
+    RestrictToUserMixin,
+    generic.DeleteView
+):
+    model = models.TVShowSeason
+    # think how to change this to movies:tvshow_detail
+    success_url = reverse_lazy('movies:tvshow_list')
+
+    def get_object(self):
+        tvshow = get_object_or_404(models.TVShow, pk=self.kwargs['pk'])
+        number = self.kwargs['url_number']
+        season = get_object_or_404(models.TVShowSeason, tvshow=tvshow,
+                                   url_number=number)
+        return season
+
+
+class TVCollView(
+    RestrictToUserMixin,
+    generic.TemplateView
+):
+    template_name = 'movies/tv_coll.html'
+
+    def get_context_data(self, **kwargs):
+        context = super(TVCollView, self).get_context_data(**kwargs)
+        current_year = self.kwargs['year']
+        context['year'] = current_year
+
+        months = range(1, 13)
+        months_items = {month: [] for month in months}
+
+        seasons = models.TVShowSeason.objects.filter(user=self.request.user)
+        for season in seasons:
+            for date in season.dates.split(', '):
+                year, month, day = [int(n) for n in date.split('-')]
+                if year == int(current_year):
+                    months_items[month].append((day, season))
+
+        packed_items = {}
+        for month in months:
+            items = []
+            row = []
+            months_items[month].sort(key=itemgetter(0))
+            for day, item in months_items[month]:
+                row.append(item)
+                if len(row) == 5:
+                    items.append(row)
+                    row = []
+            if row:
+                items.append(row)
+            packed_items[month] = items[:]
+
+        context['packed_items'] = packed_items
+
         return context

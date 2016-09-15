@@ -6,49 +6,92 @@
 {% endblock headline %}
 
 {% block content %}
-    {% include "movies/_navigation.html" %}
-    {% if directed %}
-        <h3>Director:</h3>
-        <table id="tableDirected" class='tablesorter'>
-            <thead>
-                <tr>
-                    <th>Name</th>
-                    <th class="{sorter: 'monthYear'}">Date</th>
-                    <th>Grade</th>
-            </thead>
-            <tbody>
-            {% for movie in directed %}
-                <tr>
-                    <td><a href="{% url 'movies:movie_detail' movie.pk %}">{{ movie.name }}</a></td>
-                    <td>{{ movie.first_date|date:"M Y" }}</td>
-                    <td>{{ movie.grade }}</td>
-                </tr>
-            {% endfor %}
-            </tbody>
-        </table>
+    {% if directed or starred_in %}
+        <h2>Фильмы</h2>
+        {% if directed %}
+            <h3>Режиссёр:</h3>
+            <table id="tableDirected" class='tablesorter'>
+                <thead>
+                    <tr>
+                        <th>Название</th>
+                        <th class="{sorter: 'monthYear'}">Дата</th>
+                        <th>Оценка</th>
+                    </tr>
+                </thead>
+                <tbody>
+                {% for movie in directed %}
+                    <tr>
+                        <td><a href="{% url 'movies:movie_detail' movie.pk %}">{{ movie.name }}</a></td>
+                        <td>{{ movie.first_date|date:"M Y" }}</td>
+                        <td>{{ movie.grade }}</td>
+                    </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+        {% endif %}
+
+        {% if starred_in %}
+            <h3>Актёр:</h3>
+            <table id="tableActed" class='tablesorter'>
+                <thead>
+                    <tr>
+                        <th>Название</th>
+                        <th class="{sorter: 'monthYear'}">Дата</th>
+                        <th>Оценка</th>
+                </thead>
+                <tbody>
+                {% for movie in starred_in %}
+                    <tr>
+                        <td><a href="{% url 'movies:movie_detail' movie.pk %}">{{ movie.name }}</a></td>
+                        <td>{{ movie.first_date|date:"M Y" }}</td>
+                        <td>{{ movie.grade }}</td>
+                    </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+        {% endif %}
     {% endif %}
-    {% if starred_in %}
-        <h3>Actor:</h3>
-        <table id="tableActed" class='tablesorter'>
-            <thead>
-                <tr>
-                    <th>Name</th>
-                    <th class="{sorter: 'monthYear'}">Date</th>
-                    <th>Grade</th>
-            </thead>
-            <tbody>
-            {% for movie in starred_in %}
-                <tr>
-                    <td><a href="{% url 'movies:movie_detail' movie.pk %}">{{ movie.name }}</a></td>
-                    <td>{{ movie.first_date|date:"M Y" }}</td>
-                    <td>{{ movie.grade }}</td>
-                </tr>
-            {% endfor %}
-            </tbody>
-        </table>
+
+    {% if created or tvshows_starred_in %}
+    <h2>Сериалы</h2>
+        {% if created %}
+            <h3>Создатель:</h3>
+            <table id="tableDirected" class='tablesorter'>
+                <thead>
+                    <tr>
+                        <th>Название</th>
+                </thead>
+                <tbody>
+                {% for show in created %}
+                    <tr>
+                        <td><a href="{% url 'movies:tvshow_detail' show.pk %}">{{ show.name }}</a></td>
+                    </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+        {% endif %}
+
+        {% if tvshows_starred_in %}
+            <h3>Актёр:</h3>
+            <table id="tableActed" class='tablesorter'>
+                <thead>
+                    <tr>
+                        <th>Название</th>
+                </thead>
+                <tbody>
+                {% for show in tvshows_starred_in %}
+                    <tr>
+                        <td><a href="{% url 'movies:tvshow_detail' show.pk %}">{{ show.name }}</a></td>
+                    </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+        {% endif %}
+        
     {% endif %}
-    <p>[<a href="{% url 'movies:person_list' %}">Back to all people</a>]</p>
-    <p>[<a href="{% url 'movies:person_delete' object.pk %}">Delete</a>]</p>
+
+    <p>[<a href="{% url 'movies:person_list' %}">Вернуться к списку людей</a>]</p>
+    <p>[<a href="{% url 'movies:person_delete' object.pk %}">Удалить</a>]</p>
 {% endblock content %}
 
 {% block js %}

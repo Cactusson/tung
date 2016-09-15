@@ -1,0 +1,14 @@
+{% extends "_layouts/base.html" %}
+{% load staticfiles %}
+
+{% block headline %}
+    <h1>Год {{ year }}</h1>
+{% endblock headline %}
+
+{% block content %}
+    {% include "books/_booktable.html" %}
+{% endblock content %}
+
+{% block js %}
+    <script type="text/javascript" src="{% static 'movies/js/movietable.js' %}"></script>
+{% endblock js %}

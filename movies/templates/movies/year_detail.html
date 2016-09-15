@@ -2,11 +2,10 @@
 {% load staticfiles %}
 
 {% block headline %}
-    <h1>Year {{ year }}</h1>
+    <h1>Год {{ year }}</h1>
 {% endblock headline %}
 
 {% block content %}
-    {% include "movies/_navigation.html" %}
     {% include "movies/_movietable.html" %}
 {% endblock content %}
 

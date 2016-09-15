@@ -18,14 +18,17 @@
                                 {% if item.image_url %}
                                     <a href="{% url 'movies:movie_detail' item.pk %}"><img class='item_img' src="{{ item.image_url }}"></a>
                                 {% else %}
-                                    <a href="{% url 'movies:movie_detail' item.pk %}">{{ movie }}</a>
+                                    <div class="item_box">
+                                        <a href="{% url 'movies:movie_detail' item.pk %}">(-----)</a>
+                                    </div>
                                 {% endif %}
-                                {{ item.name }} ({{ item.year }})<br>
-                                ({{ item.grade }}/10)
+                                {{ item }} ({{ item.year }})<br>
+                                ({{ item.grade }} из 10)
                             </div>
                         </td>  
                     {% endfor %}
-                </tr>    
+                </tr>
+                <br>
             {% endfor %}
             </table>
         {% endif %}

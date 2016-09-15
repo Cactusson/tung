@@ -1,0 +1,37 @@
+{% extends "_layouts/base.html" %}
+
+{% block headline %}
+    <h1>{{ object.name }}</h1>
+{% endblock headline %}
+
+{% block content %}
+    <div class="poster_stuff">
+        <img src="{{ object.image_url }}" class="poster">
+    </div>
+
+    <div class="review_stuff">
+        <p><b>Год: </b><a href="{% url 'books:year_detail' %}?year={{ object.year }}">{{ object.year }}</a>.</p>
+        
+        <p><b>Жанр: </b><a href="{% url 'books:genre_detail' %}?genre={{ object.genre }}">{{ object.genre }}</a>.</p>
+        
+        <p><b>Автор: </b>{% for author in authors_list %}
+            <a href="{% url 'books:author_detail' author.pk %}">{{ author.name }}</a>{% if not forloop.last %}, {% else %}.{% endif %}
+        {% endfor %}</p>
+
+        <br>
+
+        <p>{{ object.review|safe|linebreaks }}</p>
+
+        <br>
+
+        <p><b>Оценка: </b>{{ object.grade }} из 10.</p>
+
+        <p><b>Даты: </b>{% for date in dates_list %}
+            {{ date }}{% if not forloop.last %}, {% else %}.{% endif %}
+        {% endfor %}</p>
+
+        <p>[<a href="{% url 'books:book_update' object.pk %}">Редактировать</a>]</p>
+        <p>[<a href="{% url 'books:book_delete' object.pk %}">Удалить</a>]</p>
+    </div>
+
+{% endblock content %}

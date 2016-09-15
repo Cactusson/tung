@@ -32,4 +32,26 @@ urlpatterns = [
         name='grade_detail'),
 
     url(r'^stats/$', views.StatsView.as_view(), name='stats'),
+
+    url(r'^tv/list/$', views.TVShowListView.as_view(), name='tvshow_list'),
+    url(r'^tv/show(?P<pk>\d+)/$', views.TVShowDetailView.as_view(),
+        name='tvshow_detail'),
+    url(r'^tv/create/$', views.TVShowCreateView.as_view(),
+        name='tvshow_create'),
+    url(r'^tv/show(?P<pk>\d+)/edit$', views.TVShowUpdateView.as_view(),
+        name='tvshow_update'),
+    url(r'^tv/show(?P<pk>\d+)/delete$', views.TVShowDeleteView.as_view(),
+        name='tvshow_delete'),
+
+    url(r'tv/show(?P<pk>\d+)/s(?P<url_number>\d+)/$',
+        views.TVShowSeasonDetailView.as_view(), name='tvshowseason_detail'),
+    url(r'tv/show(?P<pk>\d+)/create_season/$',
+        views.TVShowSeasonCreateView.as_view(), name='tvshowseason_create'),
+    url(r'^tv/show(?P<pk>\d+)/s(?P<url_number>\d+)/edit$',
+        views.TVShowSeasonUpdateView.as_view(), name='tvshowseason_update'),
+    url(r'^tv/show(?P<pk>\d+)/s(?P<url_number>\d+)/delete$',
+        views.TVShowSeasonDeleteView.as_view(), name='tvshowseason_delete'),
+
+    url(r'^tv/colls/(?P<year>\d+)/$', views.TVCollView.as_view(),
+        name='tv_coll'),
 ]
