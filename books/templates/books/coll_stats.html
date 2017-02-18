@@ -1,0 +1,58 @@
+{% extends "books/base.html" %}
+{% load books_extras %}
+
+{% block title %}Книги {{ year }} (статистика) | {{ block.super }}{% endblock title %}
+
+{% block headline %}
+    <h2>{{ year }}</h2>
+{% endblock headline %}
+
+{% block content %}
+    <p>
+        {% for yr in years %}
+            {% if yr == year %}
+                <b>{{ yr }}</b>
+            {% else %}
+                <a href="{% url 'books:coll_stats' yr %}">{{ yr }}</a>
+            {% endif %}
+            {% if not forloop.last %}
+                |
+            {% endif %}
+        {% endfor %}
+    </p>
+    <p>
+        <a href="{% url 'books:coll' year %}">Колл</a> | <b>Статистика</b>
+    </p>
+
+    <br>
+
+    <p>Книг всего: {{ total_books }}</p>
+    <p>Новые: {{ new_books }}</p>
+    <p>Старые: {{ old_books }}</p>
+
+    <br>
+    <p>(Статистика только по новым книгам)</p>
+    <br>
+
+    <p>Топ-5 годов:</p>
+    {% for count, year in top_years %}
+        <p>{{ forloop.counter }}. <a href="{% url 'books:year_detail' %}?year={{ year }}">{{ year }}</a>: {{ count }}</p>
+    {% endfor %}
+
+    <br>
+
+    <p>Топ-5 жанров:</p>
+    {% for count, genre in top_genres %}
+        <p>{{ forloop.counter }}. <a href="{% url 'books:genre_detail' %}?genre={{ genre }}">{{ genre }}</a>: {{ count }}</p>
+    {% endfor %}
+
+    <br>
+
+    <p>Лучшие книги (оценки 9 и 10):</p>
+    {% for book in top_books %}
+        <p>{{ forloop.counter }}. <a href="{% url 'books:book_detail' book.pk %}">{{ book }}</a> ({{ book.grade }} из 10)</p>
+    {% empty %}
+        <p>(Таких книг нет)</p>
+    {% endfor %}
+    
+{% endblock content %}

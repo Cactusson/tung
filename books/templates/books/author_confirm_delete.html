@@ -1,4 +1,6 @@
-{% extends "_layouts/base.html" %}
+{% extends "books/base.html" %}
+
+{% block title %}Удалить {{ object }} | {{ block.super }}{% endblock title %}
 
 {% block headline %}
     <h1>Удалить {{ object.name }}</h1>

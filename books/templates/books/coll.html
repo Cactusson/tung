@@ -1,11 +1,29 @@
-{% extends "_layouts/base.html" %}
+{% extends "books/base.html" %}
 {% load books_extras %}
+
+{% block title %}Книги {{ year }} | {{ block.super }}{% endblock title %}
 
 {% block headline %}
     <h3>{{ year }}</h3>
 {% endblock headline %}
 
 {% block content %}
+    <p>
+        {% for yr in years %}
+            {% if yr == year %}
+                <b>{{ yr }}</b>
+            {% else %}
+                <a href="{% url 'books:coll' yr %}">{{ yr }}</a>
+            {% endif %}
+            {% if not forloop.last %}
+                |
+            {% endif %}
+        {% endfor %}
+    </p>
+    <p>
+        <b>Колл</b> | <a href="{% url 'books:coll_stats' year %}">Статистика</a>
+    </p>
+
     {% for month, items in packed_items.items %}
         <h3><u>{{ month|month_number_to_word }}</u></h3>
         {% if items %}

@@ -390,7 +390,7 @@ class CollStatsView(
                 all_movies.append(movie)
         context['total_movies'] = total_movies
         context['new_movies'] = new_movies
-        context['rewatches'] = total_movies - new_movies
+        context['old_movies'] = total_movies - new_movies
 
         years = {}
         for movie in all_movies:

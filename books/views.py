@@ -78,6 +78,25 @@ class LettersNavigationMixin(
         return context
 
 
+class YearsNavigationMixin(
+    views.LoginRequiredMixin
+):
+    def get_context_data(self, **kwargs):
+        context = super(YearsNavigationMixin, self).get_context_data(
+            **kwargs)
+        books = models.Book.objects.filter(user=self.request.user)
+        years = []
+        dates = [book.dates for book in books]
+        for date_string in dates:
+            for date in date_string.split(', '):
+                year = str(date.split('-')[0])
+                if year not in years:
+                    years.append(year)
+        years.sort()
+        context['years'] = years
+        return context
+
+
 class IndexView(
     LettersNavigationMixin,
     generic.TemplateView
@@ -293,7 +312,7 @@ class GenreDetailView(
 
 
 class CollView(
-    RestrictToUserMixin,
+    YearsNavigationMixin,
     generic.TemplateView
 ):
     template_name = 'books/coll.html'
@@ -329,5 +348,64 @@ class CollView(
             packed_items[month] = items[:]
 
         context['packed_items'] = packed_items
+
+        return context
+
+
+class CollStatsView(
+    YearsNavigationMixin,
+    generic.TemplateView
+):
+    template_name = 'books/coll_stats.html'
+
+    def get_context_data(self, **kwargs):
+        context = super(CollStatsView, self).get_context_data(**kwargs)
+        current_year = self.kwargs['year']
+        context['year'] = current_year
+
+        books = models.Book.objects.filter(user=self.request.user)
+        all_books = []
+        total_books = 0
+        new_books = 0
+        for book in books:
+            for date in book.dates.split(', '):
+                year, month, day = [int(n) for n in date.split('-')]
+                if year == int(current_year):
+                    total_books += 1
+            first_year = book.first_date.year
+            if first_year == int(current_year):
+                new_books += 1
+                all_books.append(book)
+        context['total_books'] = total_books
+        context['new_books'] = new_books
+        context['old_books'] = total_books - new_books
+
+        years = {}
+        for book in all_books:
+            if book.year not in years:
+                years[book.year] = 1
+            else:
+                years[book.year] += 1
+        years = [(years[yr], yr) for yr in years]
+        years.sort(reverse=True)
+        context['top_years'] = years[:5]
+
+        genres = {}
+        for book in all_books:
+            if book.genre not in genres:
+                genres[book.genre] = 1
+            else:
+                genres[book.genre] += 1
+        genres = [(genres[genre], genre) for genre in genres]
+        genres.sort(reverse=True)
+        context['top_genres'] = genres[:5]
+
+        min_grade = 9
+        top_books = []
+        for book in all_books:
+            if book.grade >= min_grade:
+                top_books.append(book)
+        top_books.sort(reverse=True, key=lambda m: m.grade)
+        context['top_books'] = top_books
 
         return context

@@ -26,5 +26,7 @@ urlpatterns = [
     url(r'^genres/$', views.GenreListView.as_view(), name='genre_list'),
     url(r'^genre/$', views.GenreDetailView.as_view(), name='genre_detail'),
 
-    url(r'^colls/(?P<year>\d+)/$', views.CollView.as_view(), name='coll'),
+    url(r'^coll/(?P<year>\d+)/$', views.CollView.as_view(), name='coll'),
+    url(r'^coll/(?P<year>\d+)/stats$', views.CollStatsView.as_view(),
+        name='coll_stats'),
 ]

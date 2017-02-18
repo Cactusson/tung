@@ -1,5 +1,7 @@
-{% extends "_layouts/base.html" %}
+{% extends "books/base.html" %}
 {% load crispy_forms_tags %}
+
+{% block title %}{{ headline }} книгу | {{ block.super }}{% endblock title %}
 
 {% block headline %}
     <h1>{{ headline }} книгу</h1>

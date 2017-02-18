@@ -1,5 +1,7 @@
-{% extends "_layouts/base.html" %}
+{% extends "books/base.html" %}
 {% load staticfiles %}
+
+{% block title %}{{ genre }} | {{ block.super }}{% endblock title %}
 
 {% block headline %}
     <h1>{{ genre }}</h1>

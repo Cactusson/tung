@@ -8,8 +8,8 @@
 {% endblock headline %}
 
 {% block content %}
-    <p>Годы: 
-    {% for yr in years %}
+    <p>
+        {% for yr in years %}
             {% if yr == year %}
                 <b>{{ yr }}</b>
             {% else %}
@@ -28,7 +28,7 @@
 
     <p>Фильмов всего: {{ total_movies }}</p>
     <p>Новые: {{ new_movies }}</p>
-    <p>Пересмотры: {{ rewatches }}</p>
+    <p>Старые: {{ old_movies }}</p>
 
     <br>
     <p>(Статистика только по новым фильмам)</p>
