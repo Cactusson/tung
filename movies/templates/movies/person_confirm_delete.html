@@ -1,7 +1,9 @@
-{% extends "_layouts/base.html" %}
+{% extends "movies/base.html" %}
+
+{% block title %}Удалить {{ object }} | {{ block.super }}{% endblock title %}
 
 {% block headline %}
-    <h1>Удалить {{ object.name }}</h1>
+    <h1>Удалить {{ object }}</h1>
 {% endblock headline %}
 
 {% block content %}

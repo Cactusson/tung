@@ -1,11 +1,29 @@
-{% extends "_layouts/base.html" %}
+{% extends "movies/base.html" %}
 {% load movies_extras %}
 
+{% block title %}Фильмы {{ year }} | {{ block.super }}{% endblock title %}
+
 {% block headline %}
-    <h3>{{ year }}</h3>
+    <h2>{{ year }}</h2>
 {% endblock headline %}
 
 {% block content %}
+    <p>
+        Годы: 
+        {% for yr in years %}
+            {% if yr == year %}
+                <b>{{ yr }}</b>
+            {% else %}
+                <a href="{% url 'movies:coll' yr %}">{{ yr }}</a>
+            {% endif %}
+            {% if not forloop.last %}
+                |
+            {% endif %}
+        {% endfor %}
+    </p>
+    <p>
+        <b>Колл</b> | <a href="{% url 'movies:coll_stats' year %}">Статистика</a>
+    </p>
     {% for month, items in packed_items.items %}
         <h3><u>{{ month|month_number_to_word }}</u></h3>
         {% if items %}

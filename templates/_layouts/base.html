@@ -3,7 +3,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>{% block title %}Tung{% endblock title %}</title>
+    <title>{% block title %}Тунг{% endblock title %}</title>
     <link rel="stylesheet" type="text/css" href="{% static 'movies/css/style.css' %}">
     
 </head>
@@ -11,6 +11,7 @@
     <div class="main">
         <div class='navbar'>
             <ul class="navbar-left">
+                <li><a href="{% url 'home' %}"><b>Тунг</b></a></li>
                 <li><a href="{% url 'movies:index' %}">Фильмы</a></li>
                 <li><a href="{% url 'movies:tvshow_list' %}">Сериалы</a></li>
                 <li><a href="{% url 'books:index' %}">Книги</a></li>

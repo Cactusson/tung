@@ -60,6 +60,25 @@ class LettersNavigationMixin(
         return context
 
 
+class YearsNavigationMixin(
+    views.LoginRequiredMixin
+):
+    def get_context_data(self, **kwargs):
+        context = super(YearsNavigationMixin, self).get_context_data(
+            **kwargs)
+        movies = models.Movie.objects.filter(user=self.request.user)
+        years = []
+        dates = [movie.dates for movie in movies]
+        for date_string in dates:
+            for date in date_string.split(', '):
+                year = str(date.split('-')[0])
+                if year not in years:
+                    years.append(year)
+        years.sort()
+        context['years'] = years
+        return context
+
+
 class LetterFilterMixin():
     def get_queryset(self):
         queryset = super(LetterFilterMixin, self).get_queryset()
@@ -82,6 +101,7 @@ class LetterFilterMixin():
 class IndexView(
     RestrictToUserMixin,
     LettersNavigationMixin,
+    YearsNavigationMixin,
     generic.ListView
 ):
     model = models.Movie
@@ -91,22 +111,6 @@ class IndexView(
         queryset = super(IndexView, self).get_queryset()
         queryset = queryset.order_by('-first_date')[:10]
         return queryset
-
-    def get_context_data(self, **kwargs):
-        context = super(IndexView, self).get_context_data(**kwargs)
-        movies = models.Movie.objects.filter(user=self.request.user)
-
-        years = []
-        dates = [movie.dates for movie in movies]
-        for date_string in dates:
-            for date in date_string.split(', '):
-                year = int(date.split('-')[0])
-                if year not in years:
-                    years.append(year)
-        years.sort()
-
-        context['years'] = years
-        return context
 
 
 class MovieListView(
@@ -320,7 +324,7 @@ class GenreDetailView(
 
 
 class CollView(
-    RestrictToUserMixin,
+    YearsNavigationMixin,
     generic.TemplateView
 ):
     template_name = 'movies/coll.html'
@@ -356,6 +360,65 @@ class CollView(
             packed_items[month] = items[:]
 
         context['packed_items'] = packed_items
+
+        return context
+
+
+class CollStatsView(
+    YearsNavigationMixin,
+    generic.TemplateView
+):
+    template_name = 'movies/coll_stats.html'
+
+    def get_context_data(self, **kwargs):
+        context = super(CollStatsView, self).get_context_data(**kwargs)
+        current_year = self.kwargs['year']
+        context['year'] = current_year
+
+        movies = models.Movie.objects.filter(user=self.request.user)
+        all_movies = []
+        total_movies = 0
+        new_movies = 0
+        for movie in movies:
+            for date in movie.dates.split(', '):
+                year, month, day = [int(n) for n in date.split('-')]
+                if year == int(current_year):
+                    total_movies += 1
+            first_year = movie.first_date.year
+            if first_year == int(current_year):
+                new_movies += 1
+                all_movies.append(movie)
+        context['total_movies'] = total_movies
+        context['new_movies'] = new_movies
+        context['rewatches'] = total_movies - new_movies
+
+        years = {}
+        for movie in all_movies:
+            if movie.year not in years:
+                years[movie.year] = 1
+            else:
+                years[movie.year] += 1
+        years = [(years[yr], yr) for yr in years]
+        years.sort(reverse=True)
+        context['top_years'] = years[:5]
+
+        genres = {}
+        for movie in all_movies:
+            if movie.genre not in genres:
+                genres[movie.genre] = 1
+            else:
+                genres[movie.genre] += 1
+        genres = [(genres[genre], genre) for genre in genres]
+        genres.sort(reverse=True)
+        context['top_genres'] = genres[:5]
+
+        min_grade = 9
+        top_movies = []
+        for movie in all_movies:
+            if movie.grade >= min_grade:
+                top_movies.append(movie)
+        top_movies.sort(reverse=True, key=lambda m: m.grade)
+        context['top_movies'] = top_movies
 
         return context
 

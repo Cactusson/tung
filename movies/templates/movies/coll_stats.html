@@ -1,0 +1,58 @@
+{% extends "movies/base.html" %}
+{% load movies_extras %}
+
+{% block title %}Фильмы {{ year }} (статистика) | {{ block.super }}{% endblock title %}
+
+{% block headline %}
+    <h2>{{ year }}</h2>
+{% endblock headline %}
+
+{% block content %}
+    <p>Годы: 
+    {% for yr in years %}
+            {% if yr == year %}
+                <b>{{ yr }}</b>
+            {% else %}
+                <a href="{% url 'movies:coll_stats' yr %}">{{ yr }}</a>
+            {% endif %}
+            {% if not forloop.last %}
+                |
+            {% endif %}
+        {% endfor %}
+    </p>
+    <p>
+        <a href="{% url 'movies:coll' year %}">Колл</a> | <b>Статистика</b>
+    </p>
+
+    <br>
+
+    <p>Фильмов всего: {{ total_movies }}</p>
+    <p>Новые: {{ new_movies }}</p>
+    <p>Пересмотры: {{ rewatches }}</p>
+
+    <br>
+    <p>(Статистика только по новым фильмам)</p>
+    <br>
+
+    <p>Топ-5 годов:</p>
+    {% for count, year in top_years %}
+        <p>{{ forloop.counter }}. <a href="{% url 'movies:year_detail' %}?year={{ year }}">{{ year }}</a>: {{ count }}</p>
+    {% endfor %}
+
+    <br>
+
+    <p>Топ-5 жанров:</p>
+    {% for count, genre in top_genres %}
+        <p>{{ forloop.counter }}. <a href="{% url 'movies:genre_detail' %}?genre={{ genre }}">{{ genre }}</a>: {{ count }}</p>
+    {% endfor %}
+
+    <br>
+
+    <p>Лучшие фильмы (оценки 9 и 10):</p>
+    {% for movie in top_movies %}
+        <p>{{ forloop.counter }}. <a href="{% url 'movies:movie_detail' movie.pk %}">{{ movie }}</a> ({{ movie.grade }} из 10)</p>
+    {% empty %}
+        <p>(Таких фильмов нет)</p>
+    {% endfor %}
+    
+{% endblock content %}

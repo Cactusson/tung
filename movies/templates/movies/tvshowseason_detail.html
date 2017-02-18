@@ -1,4 +1,6 @@
-{% extends "_layouts/base.html" %}
+{% extends "movies/base.html" %}
+
+{% block title %}{{ object }} | {{ block.super }}{% endblock title %}
 
 {% block headline %}
     <h1>{{ object }}</h1>

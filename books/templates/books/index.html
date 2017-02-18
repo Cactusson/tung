@@ -1,13 +1,15 @@
 {% extends "_layouts/base.html" %}
 
+{% block title %}Книги | {{ block.super }}{% endblock title %}
+
 {% block headline %}
-    <h1>Тунг — Книги</h1>
+    <h1>Книги</h1>
 {% endblock headline %}
 
 {% block content %}
     {% include "books/_navigation.html" %}
 
-    <p>Годы зазыра: 
+    <p>Годы: 
     {% for year in years %}
         <a href="{% url 'books:coll' year %}">{{ year }}</a>
         {% if not forloop.last %}

@@ -1,4 +1,6 @@
-{% extends "_layouts/base.html" %}
+{% extends "movies/base.html" %}
+
+{% block title %}Оценка {{ grade }} | {{ block.super }}{% endblock title %}
 
 {% block headline %}
     <h1>Фильмы с оценкой {{ grade }}</h1>
