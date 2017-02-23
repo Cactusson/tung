@@ -444,7 +444,7 @@ class GradeDetailView(
 
 
 class StatsView(
-    RestrictToUserMixin,
+    YearsNavigationMixin,
     generic.TemplateView
 ):
     template_name = 'movies/stats.html'
@@ -454,6 +454,51 @@ class StatsView(
         movies = models.Movie.objects.filter(user=self.request.user)
         total_movies = len(movies)
         context['total_movies'] = total_movies
+
+        rewatched_movies = 0
+        rewatched_max_amount = 1
+        rewatched_max_movies = []
+        for movie in movies:
+            watches = len(movie.dates.split(', '))
+            if watches > 1:
+                rewatched_movies += 1
+                if watches > rewatched_max_amount:
+                    rewatched_max_amount = watches
+                    rewatched_max_movies = [movie]
+                elif watches == rewatched_max_amount:
+                    rewatched_max_movies.append(movie)
+        context['rewatched_movies'] = rewatched_movies
+        context['rewatched_max_amount'] = rewatched_max_amount
+        context['rewatched_max_movies'] = rewatched_max_movies
+
+        years = {}
+        for movie in movies:
+            if movie.year not in years:
+                years[movie.year] = 1
+            else:
+                years[movie.year] += 1
+        years = [(years[yr], yr) for yr in years]
+        years.sort(reverse=True)
+        context['top_years'] = years[:5]
+
+        genres = {}
+        for movie in movies:
+            if movie.genre not in genres:
+                genres[movie.genre] = 1
+            else:
+                genres[movie.genre] += 1
+        genres = [(genres[genre], genre) for genre in genres]
+        genres.sort(reverse=True)
+        context['top_genres'] = genres[:5]
+
+        min_grade = 10
+        top_movies = []
+        for movie in movies:
+            if movie.grade >= min_grade:
+                top_movies.append(movie)
+        top_movies.sort(reverse=True, key=lambda m: m.grade)
+        context['top_movies'] = top_movies
+
         counts = [0 for _ in range(10)]
         for movie in movies:
             counts[movie.grade - 1] += 1
@@ -476,7 +521,17 @@ class TVShowListView(
         genres = ['drama', 'comedy', 'animated', 'fantastic', 'doc', 'other']
         genres_dict = {}
         for genre in genres:
-            genres_dict[genre] = shows.filter(genre_family=genre)
+            genre_shows = shows.filter(genre_family=genre)
+            row = []
+            genres_dict[genre] = []
+            for num in range(len(genre_shows)):
+                if num % 3 == 0:
+                    if row:
+                        genres_dict[genre].append(row)
+                        row = []
+                row.append(genre_shows[num])
+            if row:
+                genres_dict[genre].append(row)
         context['genres_dict'] = genres_dict
 
         years = []

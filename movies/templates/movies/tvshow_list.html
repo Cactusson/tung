@@ -18,34 +18,136 @@
     </p>
     
     <h2>Драматические</h2>
-    {% for show in genres_dict.drama %}
-        <p><a href="{% url 'movies:tvshow_detail' show.pk %}">{{ show }}</a></p>
+    <table>
+    {% for row in genres_dict.drama %}
+        <tr>
+            {% for show in row %}
+                <td>
+                    <div class='tv_item'>
+                        {% if show.image_url %}
+                            <a href="{% url 'movies:tvshow_detail' show.pk %}"><img class='tv_item_img' src="{{ show.image_url }}"></a>
+                        {% else %}
+                            <div class="tv_item_box">
+                                <a href="{% url 'movies:tvshow_detail' show.pk %}">(-----)</a>
+                            </div>
+                        {% endif %}
+                        {{ show }}
+                    </div>
+                </td>
+            {% endfor %}
+        </tr>
     {% endfor %}
+    </table>
 
     <h2>Комедийные</h2>
-    {% for show in genres_dict.comedy %}
-        <p><a href="{% url 'movies:tvshow_detail' show.pk %}">{{ show }}</a></p>
+    <table>
+    {% for row in genres_dict.comedy %}
+        <tr>
+            {% for show in row %}
+                <td>
+                    <div class='tv_item'>
+                        {% if show.image_url %}
+                            <a href="{% url 'movies:tvshow_detail' show.pk %}"><img class='tv_item_img' src="{{ show.image_url }}"></a>
+                        {% else %}
+                            <div class="tv_item_box">
+                                <a href="{% url 'movies:tvshow_detail' show.pk %}">(-----)</a>
+                            </div>
+                        {% endif %}
+                        {{ show }}
+                    </div>
+                </td>
+            {% endfor %}
+        </tr>
     {% endfor %}
+    </table>
 
     <h2>Анимационные</h2>
-    {% for show in genres_dict.animated %}
-        <p><a href="{% url 'movies:tvshow_detail' show.pk %}">{{ show }}</a></p>
+    <table>
+    {% for row in genres_dict.animated %}
+        <tr>
+            {% for show in row %}
+                <td>
+                    <div class='tv_item'>
+                        {% if show.image_url %}
+                            <a href="{% url 'movies:tvshow_detail' show.pk %}"><img class='tv_item_img' src="{{ show.image_url }}"></a>
+                        {% else %}
+                            <div class="tv_item_box">
+                                <a href="{% url 'movies:tvshow_detail' show.pk %}">(-----)</a>
+                            </div>
+                        {% endif %}
+                        {{ show }}
+                    </div>
+                </td>
+            {% endfor %}
+        </tr>
     {% endfor %}
+    </table>
 
     <h2>Фантастические</h2>
-    {% for show in genres_dict.fantastic %}
-        <p><a href="{% url 'movies:tvshow_detail' show.pk %}">{{ show }}</a></p>
+    <table>
+    {% for row in genres_dict.fantastic %}
+        <tr>
+            {% for show in row %}
+                <td>
+                    <div class='tv_item'>
+                        {% if show.image_url %}
+                            <a href="{% url 'movies:tvshow_detail' show.pk %}"><img class='tv_item_img' src="{{ show.image_url }}"></a>
+                        {% else %}
+                            <div class="tv_item_box">
+                                <a href="{% url 'movies:tvshow_detail' show.pk %}">(-----)</a>
+                            </div>
+                        {% endif %}
+                        {{ show }}
+                    </div>
+                </td>
+            {% endfor %}
+        </tr>
     {% endfor %}
+    </table>
 
     <h2>Документальные</h2>
-    {% for show in genres_dict.doc %}
-        <p><a href="{% url 'movies:tvshow_detail' show.pk %}">{{ show }}</a></p>
+    <table>
+    {% for row in genres_dict.doc %}
+        <tr>
+            {% for show in row %}
+                <td>
+                    <div class='tv_item'>
+                        {% if show.image_url %}
+                            <a href="{% url 'movies:tvshow_detail' show.pk %}"><img class='tv_item_img' src="{{ show.image_url }}"></a>
+                        {% else %}
+                            <div class="tv_item_box">
+                                <a href="{% url 'movies:tvshow_detail' show.pk %}">(-----)</a>
+                            </div>
+                        {% endif %}
+                        {{ show }}
+                    </div>
+                </td>
+            {% endfor %}
+        </tr>
     {% endfor %}
+    </table>
 
     <h2>Другие</h2>
-    {% for show in genres_dict.other %}
-        <p><a href="{% url 'movies:tvshow_detail' show.pk %}">{{ show }}</a></p>
+    <table>
+    {% for row in genres_dict.other %}
+        <tr>
+            {% for show in row %}
+                <td>
+                    <div class='tv_item'>
+                        {% if show.image_url %}
+                            <a href="{% url 'movies:tvshow_detail' show.pk %}"><img class='tv_item_img' src="{{ show.image_url }}"></a>
+                        {% else %}
+                            <div class="tv_item_box">
+                                <a href="{% url 'movies:tvshow_detail' show.pk %}">(-----)</a>
+                            </div>
+                        {% endif %}
+                        {{ show }}
+                    </div>
+                </td>
+            {% endfor %}
+        </tr>
     {% endfor %}
+    </table>
 
     <p>[<a href="{% url 'movies:tvshow_create' %}">Добавить сериал</a>]</p>
 {% endblock content %}

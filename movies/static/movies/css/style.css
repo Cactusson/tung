@@ -65,6 +65,25 @@ p {
     background-color: #CCCCFF;
 }
 
+.tv_item {
+    margin: 10px 30px;
+    width: 250px;
+    height: 100px;
+    display: inline-block;
+    text-align: center;
+}
+
+.tv_item_img {
+    width: 250px;
+    height: 100px;
+}
+
+.tv_item_box {
+    width: 250px;
+    height: 100px;
+    background-color: #CCCCFF;
+}
+
 .navigation {
     font-size: 13px;
 }
