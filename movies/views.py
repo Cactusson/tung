@@ -1,8 +1,9 @@
 from operator import itemgetter
+import random
 
 from django.core.urlresolvers import reverse_lazy
 from django.db.models import Count
-from django.shortcuts import get_object_or_404
+from django.shortcuts import get_object_or_404, redirect
 from django.views import generic
 
 from braces import views
@@ -508,6 +509,12 @@ class StatsView(
 
         context['grades_counts'] = grades_counts
         return context
+
+
+def random_movie(request):
+    movies = models.Movie.objects.filter(user=request.user)
+    movie = random.choice(movies)
+    return redirect(movie)
 
 
 class TVShowListView(

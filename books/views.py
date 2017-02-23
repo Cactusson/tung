@@ -1,7 +1,9 @@
 from operator import itemgetter
+import random
 
 from django.core.urlresolvers import reverse_lazy
 from django.db.models import Count
+from django.shortcuts import redirect
 from django.views import generic
 
 from braces import views
@@ -409,3 +411,9 @@ class CollStatsView(
         context['top_books'] = top_books
 
         return context
+
+
+def random_book(request):
+    books = models.Book.objects.filter(user=request.user)
+    book = random.choice(books)
+    return redirect(book)

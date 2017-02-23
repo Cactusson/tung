@@ -29,4 +29,6 @@ urlpatterns = [
     url(r'^coll/(?P<year>\d+)/$', views.CollView.as_view(), name='coll'),
     url(r'^coll/(?P<year>\d+)/stats$', views.CollStatsView.as_view(),
         name='coll_stats'),
+
+    url(r'^random/$', views.random_book, name='random_book'),
 ]

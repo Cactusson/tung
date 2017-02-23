@@ -30,10 +30,10 @@ urlpatterns = [
     url(r'^coll/(?P<year>\d+)/stats$', views.CollStatsView.as_view(),
         name='coll_stats'),
 
+    url(r'^stats/$', views.StatsView.as_view(), name='stats'),
     url(r'^grade/(?P<grade>\d+)', views.GradeDetailView.as_view(),
         name='grade_detail'),
-
-    url(r'^stats/$', views.StatsView.as_view(), name='stats'),
+    url(r'^random/$', views.random_movie, name='random_movie'),
 
     url(r'^tv/list/$', views.TVShowListView.as_view(), name='tvshow_list'),
     url(r'^tv/show(?P<pk>\d+)/$', views.TVShowDetailView.as_view(),
