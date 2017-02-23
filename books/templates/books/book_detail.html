@@ -1,4 +1,5 @@
 {% extends "books/base.html" %}
+{% load books_extras %}
 
 {% block title %}{{ object }} | {{ block.super }}{% endblock title %}
 
@@ -29,8 +30,13 @@
         <p><b>Оценка: </b>{{ object.grade }} из 10.</p>
 
         <p><b>Даты: </b>{% for date in dates_list %}
-            {{ date }}{% if not forloop.last %}, {% else %}.{% endif %}
+            {{ date|translate_date_from_text }}{% if not forloop.last %}, {% else %}.{% endif %}
         {% endfor %}</p>
+
+        {% if object.date_created %}
+            <p><b>Дата создания:</b> {{ object.date_created|translate_date }}</p>
+            <p><b>Последнее обновление:</b> {{ object.date_edited|translate_date }}</p>
+        {% endif %}
 
         <p>[<a href="{% url 'books:book_update' object.pk %}">Редактировать</a>]</p>
         <p>[<a href="{% url 'books:book_delete' object.pk %}">Удалить</a>]</p>

@@ -42,6 +42,8 @@ class Book(models.Model):
     first_date = models.DateField()
     review = models.TextField(blank=True)
     grade = models.IntegerField(default=0)
+    date_created = models.DateField(auto_now_add=True, null=True)
+    date_edited = models.DateField(auto_now=True, null=True)
 
     def __str__(self):
         return self.name

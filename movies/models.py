@@ -45,6 +45,8 @@ class Movie(models.Model):
     first_date = models.DateField()
     review = models.TextField(blank=True)
     grade = models.IntegerField(default=0)
+    date_created = models.DateField(auto_now_add=True, null=True)
+    date_edited = models.DateField(auto_now=True, null=True)
 
     def __str__(self):
         return self.name
@@ -119,6 +121,8 @@ class TVShow(models.Model):
     creators_list = models.CharField(max_length=3000, blank=True)
     creators = models.ManyToManyField(
         Person, related_name='created', blank=True)
+    date_created = models.DateField(auto_now_add=True, null=True)
+    date_edited = models.DateField(auto_now=True, null=True)
 
     def __str__(self):
         return self.name
@@ -159,6 +163,8 @@ class TVShowSeason(models.Model):
     first_date = models.DateField()
     review = models.TextField(blank=True)
     grade = models.IntegerField(default=0)
+    date_created = models.DateField(auto_now_add=True, null=True)
+    date_edited = models.DateField(auto_now=True, null=True)
 
     def __str__(self):
         return "{} — Сезон {}".format(self.tvshow.name, self.number)
