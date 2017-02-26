@@ -7,15 +7,6 @@
 {% block content %}
     {% include "movies/_navigation.html" %}
 
-    <p>Годы: 
-    {% for year in years %}
-        <a href="{% url 'movies:coll' year %}">{{ year }}</a>
-        {% if not forloop.last %}
-            |
-        {% endif %}
-    {% endfor %}
-    </p>
-
     <h3>Последние добавленные фильмы:</h3>
     <ul>
     {% for object in object_list %}

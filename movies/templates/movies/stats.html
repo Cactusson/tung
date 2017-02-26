@@ -7,9 +7,10 @@
 {% endblock headline %}
 
 {% block content %}
+    {% include "movies/_navigation.html" %}
 
     <p>По годам: 
-        {% for yr in years %}
+        {% for yr in years_exist %}
             <a href="{% url 'movies:coll_stats' yr %}">{{ yr }}</a>
             {% if not forloop.last %}
                 |

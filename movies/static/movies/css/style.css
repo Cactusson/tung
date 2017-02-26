@@ -85,7 +85,26 @@ p {
 }
 
 .navigation {
-    font-size: 13px;
+    font-size: 14px;
+}
+
+.navigation_left_field {
+    text-align: right;
+}
+
+.navigation_right_field {
+    text-align: left;
+}
+
+.navigation > table {
+    border-collapse: collapse;
+}
+
+.nagivation > td {
+    color: blue;
+    border: 1px solid #999;
+    padding: 0.5rem;
+    text-align: left;
 }
 
 .navbar {

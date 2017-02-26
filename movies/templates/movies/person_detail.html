@@ -8,6 +8,7 @@
 {% endblock headline %}
 
 {% block content %}
+    {% include "movies/_navigation.html" %}
     {% if directed or starred_in %}
         <h2>Фильмы</h2>
         {% if directed %}

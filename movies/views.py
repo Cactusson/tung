@@ -76,7 +76,7 @@ class YearsNavigationMixin(
                 if year not in years:
                     years.append(year)
         years.sort()
-        context['years'] = years
+        context['years_exist'] = years
         return context
 
 
@@ -115,6 +115,7 @@ class IndexView(
 
 
 class MovieListView(
+    YearsNavigationMixin,
     generic.TemplateView
 ):
     template_name = 'movies/movie_list.html'
@@ -131,11 +132,15 @@ class MovieListView(
             else:
                 movies = movies.filter(first_letter=letter)
         context['movies'] = movies
+
+        context['boldify_movies'] = True
+
         return context
 
 
 class MovieDetailView(
     RestrictToUserMixin,
+    YearsNavigationMixin,
     generic.DetailView
 ):
     model = models.Movie
@@ -200,6 +205,7 @@ class MovieDeleteView(
 
 
 class PersonListView(
+    YearsNavigationMixin,
     generic.TemplateView
 ):
     template_name = 'movies/person_list.html'
@@ -221,11 +227,15 @@ class PersonListView(
         people = people.annotate(directed_count=Count(
             'directed', distinct=True))
         context['people'] = people
+
+        context['boldify_people'] = True
+
         return context
 
 
 class PersonDetailView(
     RestrictToUserMixin,
+    YearsNavigationMixin,
     LetterFilterMixin,
     generic.DetailView
 ):
@@ -255,6 +265,7 @@ class PersonDeleteView(
 
 
 class YearListView(
+    YearsNavigationMixin,
     generic.TemplateView
 ):
     template_name = 'movies/year_list.html'
@@ -270,10 +281,14 @@ class YearListView(
             count = len(list(movies.filter(year=year)))
             years_counts.append(count)
         context['years'] = zip(years, years_counts)
+
+        context['boldify_years'] = True
+
         return context
 
 
 class YearDetailView(
+    YearsNavigationMixin,
     generic.TemplateView
 ):
     template_name = 'movies/year_detail.html'
@@ -290,6 +305,7 @@ class YearDetailView(
 
 
 class GenreListView(
+    YearsNavigationMixin,
     generic.TemplateView
 ):
     template_name = 'movies/genre_list.html'
@@ -305,10 +321,14 @@ class GenreListView(
             count = len(list(movies.filter(genre=genre)))
             genres_counts.append(count)
         context['genres'] = zip(genres, genres_counts)
+
+        context['boldify_genres'] = True
+
         return context
 
 
 class GenreDetailView(
+    YearsNavigationMixin,
     generic.TemplateView
 ):
     template_name = 'movies/genre_detail.html'
@@ -361,6 +381,8 @@ class CollView(
             packed_items[month] = items[:]
 
         context['packed_items'] = packed_items
+
+        context['boldify_coll'] = True
 
         return context
 
@@ -425,6 +447,7 @@ class CollStatsView(
 
 
 class GradeDetailView(
+    YearsNavigationMixin,
     RestrictToUserMixin,
     generic.ListView
 ):
@@ -508,6 +531,9 @@ class StatsView(
         grades_counts = zip(grades, counts)
 
         context['grades_counts'] = grades_counts
+
+        context['boldify_stats'] = True
+
         return context
 
 

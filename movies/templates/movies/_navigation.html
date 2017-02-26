@@ -1,54 +1,52 @@
 <div class="navigation">
-    <table>
-        <tr>
-            <td><b>Фильмы: </b></td>
-            <td width="10px">&nbsp;</td>
-            <td>
-                {% for letter in all_movie_letters_en %}
-                    {% if letter in movie_letters_en %}
-                        <a href="{% url 'movies:movie_list' %}?letter={{ letter }}">{{ letter }}</a>
-                    {% else %}
-                        {{ letter }}
-                    {% endif %}
-                {% endfor %}
-            </td>
-        </tr>
-        <tr>
-            <td></td>
-            <td width="10px">&nbsp;</td>
-            <td>
-                {% for letter in all_movie_letters_ru %}
-                    {% if letter in movie_letters_ru %}
-                        <a href="{% url 'movies:movie_list' %}?letter={{ letter }}">{{ letter }}</a>
-                    {% else %}
-                        {{ letter }}
-                    {% endif %}
-                {% endfor %}
-            </td>
-        </tr>
-        <tr>
-            <td><b>Люди: </b></td>
-            <td width="10px">&nbsp;</td>
-            <td>
-                {% for letter in all_person_letters %}
-                    {% if letter in person_letters %}
-                        <a href="{% url 'movies:person_list' %}?letter={{ letter }}">{{ letter }}</a>
-                    {% else %}
-                        {{ letter }}
-                    {% endif %}
-                {% endfor %}
-            </td>
-        </tr>
-    </table>
-    <table>
-        <tr>
-            <td><a href="{% url 'movies:year_list' %}">Годы</a></td>
-            <td width="10px">&nbsp;|</td>
-            <td><a href="{% url 'movies:genre_list' %}">Жанры</a></td>
-            <td width="10px">&nbsp;|</td>
-            <td><a href="{% url 'movies:stats' %}">Статистика</a></td>
-            <td width="10px">&nbsp;|</td>
-            <td><a href="{% url 'movies:random_movie' %}">Случайная рецензия</a></td>
-        </tr>
-    </table>
+    {% if boldify_movies %}
+        <b>Фильмы</b>
+    {% else %}
+        <a href="{% url 'movies:movie_list' %}">Фильмы</a>
+    {% endif %}
+     <b>|</b> 
+    {% if boldify_people %}
+        <b>Люди</b>
+    {% else %}
+        <a href="{% url 'movies:person_list' %}">Люди</a>
+    {% endif %}
+
+    <br>
+
+    {% if boldify_years %}
+        <b>Годы</b>
+    {% else %}
+        <a href="{% url 'movies:year_list' %}">Годы</a>
+    {% endif %}
+     <b>|</b> 
+    {% if boldify_genres %}
+        <b>Жанры</b>
+    {% else %}
+        <a href="{% url 'movies:genre_list' %}">Жанры</a>
+    {% endif %}
+     <b>|</b> 
+    {% if boldify_stats %}
+         <b>Статистика</b>
+    {% else %}
+        <a href="{% url 'movies:stats' %}">Статистика</a>
+    {% endif %} 
+     <b>|</b>  
+    <a href="{% url 'movies:random_movie' %}">Случайная рецензия</a>
+
+    <br>
+ 
+    {% for yr in years_exist %}
+        {% if boldify_coll %}
+            {% if year == yr %}
+                <b>{{ yr }}</b>
+            {% else %}
+                <a href="{% url 'movies:coll' yr %}">{{ yr }}</a>
+            {% endif %}
+        {% else %}
+            <a href="{% url 'movies:coll' yr %}">{{ yr }}</a>
+        {% endif %}
+        {% if not forloop.last %}
+            <b>|</b>
+        {% endif %}
+    {% endfor %}
 </div>

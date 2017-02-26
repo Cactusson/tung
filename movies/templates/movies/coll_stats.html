@@ -8,18 +8,8 @@
 {% endblock headline %}
 
 {% block content %}
-    <p>
-        {% for yr in years %}
-            {% if yr == year %}
-                <b>{{ yr }}</b>
-            {% else %}
-                <a href="{% url 'movies:coll_stats' yr %}">{{ yr }}</a>
-            {% endif %}
-            {% if not forloop.last %}
-                |
-            {% endif %}
-        {% endfor %}
-    </p>
+    {% include "movies/_navigation.html" %}
+
     <p>
         <a href="{% url 'movies:coll' year %}">Колл</a> | <b>Статистика</b>
     </p>
