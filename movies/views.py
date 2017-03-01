@@ -415,22 +415,46 @@ class CollStatsView(
         context['new_movies'] = new_movies
         context['old_movies'] = total_movies - new_movies
 
+        directors = {}
+        actors = {}
         years = {}
+        genres = {}
+
         for movie in all_movies:
+            for director in movie.directors.all():
+                if director in directors:
+                    directors[director] += 1
+                else:
+                    directors[director] = 1
+
+            for actor in movie.actors.all():
+                if actor in actors:
+                    actors[actor] += 1
+                else:
+                    actors[actor] = 1
+
             if movie.year not in years:
                 years[movie.year] = 1
             else:
                 years[movie.year] += 1
-        years = [(years[yr], yr) for yr in years]
-        years.sort(reverse=True)
-        context['top_years'] = years[:5]
 
-        genres = {}
-        for movie in all_movies:
             if movie.genre not in genres:
                 genres[movie.genre] = 1
             else:
                 genres[movie.genre] += 1
+
+        directors = [(name, directors[name]) for name in directors.keys()]
+        directors.sort(key=lambda x: x[1], reverse=True)
+        context['top_directors'] = directors[:5]
+
+        actors = [(name, actors[name]) for name in actors.keys()]
+        actors.sort(key=lambda x: x[1], reverse=True)
+        context['top_actors'] = actors[:5]
+
+        years = [(years[yr], yr) for yr in years]
+        years.sort(reverse=True)
+        context['top_years'] = years[:5]
+
         genres = [(genres[genre], genre) for genre in genres]
         genres.sort(reverse=True)
         context['top_genres'] = genres[:5]
@@ -442,6 +466,8 @@ class CollStatsView(
                 top_movies.append(movie)
         top_movies.sort(reverse=True, key=lambda m: m.grade)
         context['top_movies'] = top_movies
+
+        context['boldify_coll'] = True
 
         return context
 
@@ -514,6 +540,18 @@ class StatsView(
         genres = [(genres[genre], genre) for genre in genres]
         genres.sort(reverse=True)
         context['top_genres'] = genres[:5]
+
+        people = models.Person.objects.filter(user=self.request.user)
+
+        directors = list(people.annotate(directed_count=Count(
+                         'directed', distinct=True)))
+        directors.sort(key=lambda person: person.directed_count, reverse=True)
+        context['top_directors'] = directors[:5]
+
+        actors = list(people.annotate(acted_count=Count(
+                      'starred_in', distinct=True)))
+        actors.sort(key=lambda person: person.acted_count, reverse=True)
+        context['top_actors'] = actors[:5]
 
         min_grade = 10
         top_movies = []

@@ -41,6 +41,20 @@
 
     <br>
 
+    <h3>Топ-5 режиссёров</h3>
+    {% for director in top_directors %}
+        <p>{{ forloop.counter }}. <a href="{% url 'movies:person_detail' director.pk %}">{{ director }}</a>: {{ director.directed_count }}</p>
+    {% endfor %}
+
+    <br>
+
+    <h3>Топ-5 актёров</h3>
+    {% for actor in top_actors %}
+        <p>{{ forloop.counter }}. <a href="{% url 'movies:person_detail' actor.pk %}">{{ actor }}</a>: {{ actor.acted_count }}</p>
+    {% endfor %}
+
+    <br>
+
     <h3>Лучшие фильмы (с оценкой 10)</h3>
     {% for movie in top_movies %}
         <p>{{ forloop.counter }}. <a href="{% url 'movies:movie_detail' movie.pk %}">{{ movie }}</a> ({{ movie.grade }} из 10)</p>

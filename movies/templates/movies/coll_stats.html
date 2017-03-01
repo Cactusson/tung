@@ -13,32 +13,63 @@
     <p>
         <a href="{% url 'movies:coll' year %}">Колл</a> | <b>Статистика</b>
     </p>
+    <p>
+        {% for yr in years_exist %}
+        {% if boldify_coll %}
+            {% if year == yr %}
+                <b>{{ yr }}</b>
+            {% else %}
+                <a href="{% url 'movies:coll_stats' yr %}">{{ yr }}</a>
+            {% endif %}
+        {% else %}
+            <a href="{% url 'movies:coll_stats' yr %}">{{ yr }}</a>
+        {% endif %}
+        {% if not forloop.last %}
+            |
+        {% endif %}
+    {% endfor %}
+    </p>
 
     <br>
 
-    <p>Фильмов всего: {{ total_movies }}</p>
-    <p>Новые: {{ new_movies }}</p>
-    <p>Старые: {{ old_movies }}</p>
+    <h3>В целом</h3>
+    <p><b>Фильмов всего:</b> {{ total_movies }}</p>
+    <p><b>Новые:</b> {{ new_movies }}</p>
+    <p><b>Старые:</b> {{ old_movies }}</p>
 
     <br>
     <p>(Статистика только по новым фильмам)</p>
     <br>
 
-    <p>Топ-5 годов:</p>
+    <h3>Топ-5 годов:</h3>
     {% for count, year in top_years %}
         <p>{{ forloop.counter }}. <a href="{% url 'movies:year_detail' %}?year={{ year }}">{{ year }}</a>: {{ count }}</p>
     {% endfor %}
 
     <br>
 
-    <p>Топ-5 жанров:</p>
+    <h3>Топ-5 жанров:</h3>
     {% for count, genre in top_genres %}
         <p>{{ forloop.counter }}. <a href="{% url 'movies:genre_detail' %}?genre={{ genre }}">{{ genre }}</a>: {{ count }}</p>
     {% endfor %}
 
     <br>
 
-    <p>Лучшие фильмы (оценки 9 и 10):</p>
+    <h3>Топ-5 режиссёров</h3>
+    {% for director, count in top_directors %}
+        <p>{{ forloop.counter }}. <a href="{% url 'movies:person_detail' director.pk %}">{{ director }}</a>: {{ count }}</p>
+    {% endfor %}
+
+    <br>
+
+    <h3>Топ-5 актёров</h3>
+    {% for actor, count in top_actors %}
+        <p>{{ forloop.counter }}. <a href="{% url 'movies:person_detail' actor.pk %}">{{ actor }}</a>: {{ count }}</p>
+    {% endfor %}
+
+    <br>
+
+    <h3>Лучшие фильмы (оценки 9 и 10):</h3>
     {% for movie in top_movies %}
         <p>{{ forloop.counter }}. <a href="{% url 'movies:movie_detail' movie.pk %}">{{ movie }}</a> ({{ movie.grade }} из 10)</p>
     {% empty %}

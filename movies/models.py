@@ -58,6 +58,16 @@ class Movie(models.Model):
         self.set_first_letter()
         self.set_first_date()
 
+        if self.actors_list:
+            if '\n' in self.actors_list:
+                lst = self.actors_list.split('\n')
+                to_join = []
+                for indx, name in enumerate(lst):
+                    if indx != len(lst) - 1:
+                        name = name[:-1]
+                    to_join.append(name)
+                self.actors_list = ', '.join(to_join)
+
         super(Movie, self).save(*args, **kwargs)
 
         if self.directors:

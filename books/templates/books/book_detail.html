@@ -21,11 +21,7 @@
             <a href="{% url 'books:author_detail' author.pk %}">{{ author.name }}</a>{% if not forloop.last %}, {% else %}.{% endif %}
         {% endfor %}</p>
 
-        <br>
-
         <p>{{ object.review|safe|linebreaks }}</p>
-
-        <br>
 
         <p><b>Оценка: </b>{{ object.grade }} из 10.</p>
 

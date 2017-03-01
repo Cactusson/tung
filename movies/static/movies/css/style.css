@@ -36,6 +36,7 @@ p {
     float: left;
     width: 240px;
     margin-right: 20px;
+    margin-top: 20px;
 }
 
 .review_stuff {
@@ -67,10 +68,23 @@ p {
 
 .tv_item {
     margin: 10px 30px;
-    width: 250px;
-    height: 100px;
+    width: 220px;
+    height: 90px;
     display: inline-block;
     text-align: center;
+}
+
+.tv_poster {
+    width: 250px;
+    height: 100px;
+}
+
+.tv_poster_stuff {
+    float: left;
+    width: 250px;
+    height: 100px;
+    margin-right: 20px;
+    margin-top: 20px;
 }
 
 .tv_item_img {
