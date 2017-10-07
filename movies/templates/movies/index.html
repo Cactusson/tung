@@ -7,12 +7,35 @@
 {% block content %}
     {% include "movies/_navigation.html" %}
 
+    <!--
     <h3>Последние добавленные фильмы:</h3>
     <ul>
     {% for object in object_list %}
         <li><a href="{% url 'movies:movie_detail' object.pk %}">{{ object.name }} ({{ object.year }})</a> — {{ object.first_date|date:"M Y" }} — {{ object.grade }}/10</li>
     {% endfor %}
     </ul>
+    -->
+
+    <table>
+        <tr>
+            {% for item in first_row %}
+                <td>
+                    <div class='item'>
+                        <a href="{% url 'movies:movie_detail' item.pk %}"><img class='item_img' src="{{ item.image_url }}"></a>
+                    </div>
+                </td>
+            {% endfor %}
+        </tr>
+        <tr>
+            {% for item in second_row %}
+                <td>
+                    <div class='item'>
+                        <a href="{% url 'movies:movie_detail' item.pk %}"><img class='item_img' src="{{ item.image_url }}"></a>
+                    </div>
+                </td>
+            {% endfor %}
+        </tr>
+    </table>
 
     <p>(<a href="{% url 'movies:movie_list' %}">все фильмы</a>)</p>
 

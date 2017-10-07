@@ -103,15 +103,18 @@ class IndexView(
     RestrictToUserMixin,
     LettersNavigationMixin,
     YearsNavigationMixin,
-    generic.ListView
+    generic.TemplateView
 ):
     model = models.Movie
     template_name = 'movies/index.html'
 
-    def get_queryset(self):
-        queryset = super(IndexView, self).get_queryset()
-        queryset = queryset.order_by('-first_date')[:10]
-        return queryset
+    def get_context_data(self, **kwargs):
+        context = super(IndexView, self).get_context_data(**kwargs)
+        movies = list(models.Movie.objects.filter(user=self.request.user))
+        random.shuffle(movies)
+        context['first_row'] = movies[:5]
+        context['second_row'] = movies[6:11]
+        return context
 
 
 class MovieListView(
